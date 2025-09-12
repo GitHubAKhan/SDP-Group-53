@@ -1,0 +1,20 @@
+MEETING WITH TIM CURRY 2025-09-12
+
+- 30% attendance
+- 40% is any presentations and demos
+- 30% Writing assignments
+- It is a W course so we have some writing:
+	- First 2 writing assignments ideas of SW development methodologies
+	- Third documentation
+- Break it down because it is a really big project
+	- Our group decided to break it down and focus on just S&P500 and GSCI
+- Need to get access to a Bloomberg terminal, tell Tim who to reach out to and he will email them. 
+- Research and code at the same time hand in hand
+- Will help adjust our timeline on what we need to do
+- Email Tim if he has not yet sent out by Sunday
+
+
+TODO FOR NEXT MEETING
+- Each person should do their own research on commodities and US equities.
+- Bring 2 current events to each meeting so we can talk about them. 
+- Get access to the Bloomberg terminal. 
