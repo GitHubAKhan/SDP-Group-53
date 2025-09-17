@@ -1,0 +1,31 @@
+2025-09-17 Team Meeting 
+
+- PP tore his ACL
+- AK internship in Investment Management 
+- CJ part time student next semester
+- Preston is the youngest of six
+- TC Brooklyn, CT
+STRUCTURE OF COURSE
+- Meet weekly, 30 minute meeting go around. Milestones, check ins, seeing if we are blocked by anything
+- For the actual W part of the course: 
+	- 30% of participation
+	- 30% Final Presentation/Demo
+	- 30% Writing
+	- 10% Peer and Sponsor Feedback
+- TC will miss 2 meetings, first Wednesday of every month faculty meeting
+- PAPERS ARE INDIVIDUAL, instructions for papers are attached in HuskyCT
+- Paper 1 - Software Dev Methodologies (5 pages, 1500 words), rough draft due 9-29, peer review due 10-1
+- Paper 2 - Assessing Realistic Issues (4 pages, 1200 words)
+- Code documentation (6 pages, 1800 words)
+- Will have a due date for a rough draft, when you need to submit. Then each member, within Husky CT, will each be assigned a peer reviewer. Over the course of 2 days, will need to provide feedback based off the posted rubric. 
+- Papers must need to be written in markdown, TC attached how to do it. Will need to convert markdown into pdf. 
+	- pandoc -i input_file_name.md -o output_file_name.pdf
+
+TODO BEFORE 2025-09-22
+- Define roles: Each team member's duty is clearly defined.
+- Self evaluation: Describe how your team will evaluate its progress, including how to determine if progress is too slow and how to recover if that happens.
+	- RUBRIC: Self-evaluation is stated to occur at least every two weeks. The method of evaluation provides a clear indicator of team progress and can be used to correct course early and often if necessary.
+- Minimum viable product (MVP): Define a minimum viable product for the Fall and Spring semesters. 
+	- RUBRIC: Contract contains clear criteria for the minimum viable products to be produced in both Fall and Spring semesters.
+- LONG TERM: Should try to have this up and running before the semester ends so we can begin displaying results
+
