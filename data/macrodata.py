@@ -14,17 +14,16 @@ END_DATE = datetime.today().strftime("%Y-%m-%d")
 
 # --- Macro tickers ---
 macro_tickers = {
-    "CPI_YoY": "CPI YOY Index",
-    "Core_PCE_YoY": "PCE CYOY Index",
-    "Unemployment_Rate_U3": "USURTOT Index",
-    "GDP_QoQ_Ann": "GDP CQOQ Index",
-    "Fed_Funds_Rate": "FDFD Index",
-    "Discount_Rate": "FRBDIS Index",
-    "UST_2Y_Yield": "USGG2YR Index",
-    "UST_5Y_Yield": "USGG5YR Index",
-    "UST_10Y_Yield": "USGG10YR Index",
-    "UST_TR_5_10Y": "LT05TRUU Index",
-    "Gold_Spot_USD": "XAU Curncy",
+    "CPI_YoY": "CPI YOY:IND",
+    "Core_PCE_YoY": "PCE CYOY:IND",
+    "Unemployment_Rate_U3": "USURTOT:IND",
+    "GDP_QoQ_Ann": "GDP CQOQ:IND",
+    "Fed_Funds_Rate": "FDFD:IND",
+    # BLOOMBERG DOES NOT HAVE A DISCOUNT RATE
+    "UST_2Y_Yield": "USGG2YR:IND",
+    "UST_5Y_Yield": "USGG5YR:IND",
+    "UST_10Y_Yield": "USGG10YR:IND",
+    "Gold_Spot_USD": "XAU:CUR",
 }
 
 FIELD_CANDIDATES = ["PX_LAST", "VALUE", "INDX_VAL", "LAST_PRICE"]
@@ -56,20 +55,20 @@ def main():
     for name, ticker in macro_tickers.items():
         series, fld = fetch_series(ticker)
         if series is None:
-            print(f"⚠️ No data for {name} ({ticker})")
+            print(f"No data for {name} ({ticker})")
             meta.append([name, ticker, "FAILED"])
             continue
 
         series = series.rename(name)
         combined = pd.concat([combined, series], axis=1)
-        print(f"✅ {name}: {ticker} ({fld}) → {series.dropna().shape[0]} rows")
+        print(f"{name}: {ticker} ({fld}) → {series.dropna().shape[0]} rows")
         meta.append([name, ticker, fld])
 
     combined.index.name = "date"
     combined = combined.sort_index()
 
     if combined.empty:
-        print("❌ No data pulled.")
+        print("No data pulled.")
         return
 
     # Momentum features
@@ -88,7 +87,7 @@ def main():
         feats.to_excel(xw, sheet_name="features")
         meta_df.to_excel(xw, sheet_name="meta", index=False)
 
-    print(f"\n✅ Saved {OUT_XLSX}")
+    print(f"\n Saved {OUT_XLSX}")
     print(f"   raw:      {combined.shape}")
     print(f"   features: {feats.shape}")
 
