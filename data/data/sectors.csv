@@ -1,0 +1,504 @@
+ticker,sector
+CPT US Equity,Real Estate
+CRL US Equity,Health Care
+CRM US Equity,Information Technology
+CRWD US Equity,Information Technology
+CSCO US Equity,Information Technology
+CSGP US Equity,Real Estate
+CSX US Equity,Industrials
+CTAS US Equity,Industrials
+CTRA US Equity,Energy
+CTSH US Equity,Information Technology
+ETR US Equity,Utilities
+EVRG US Equity,Utilities
+EW US Equity,Health Care
+EXC US Equity,Utilities
+EXE US Equity,Energy
+CCI US Equity,Real Estate
+CCL US Equity,Consumer Discretionary
+CDNS US Equity,Information Technology
+CDW US Equity,Information Technology
+CEG US Equity,Utilities
+CF US Equity,Materials
+CFG US Equity,Financials
+CHD US Equity,Consumer Staples
+CHRW US Equity,Industrials
+CHTR US Equity,Communication Services
+A US Equity,Health Care
+AAPL US Equity,Information Technology
+ABBV US Equity,Health Care
+ABNB US Equity,Consumer Discretionary
+ABT US Equity,Health Care
+ACGL US Equity,Financials
+ACN US Equity,Information Technology
+ADBE US Equity,Information Technology
+ADI US Equity,Information Technology
+ADM US Equity,Consumer Staples
+ADP US Equity,Industrials
+ADSK US Equity,Information Technology
+AEE US Equity,Utilities
+AEP US Equity,Utilities
+AES US Equity,Utilities
+AFL US Equity,Financials
+AIG US Equity,Financials
+AIZ US Equity,Financials
+AJG US Equity,Financials
+AKAM US Equity,Information Technology
+BX US Equity,Financials
+BXP US Equity,Real Estate
+C US Equity,Financials
+CAG US Equity,Consumer Staples
+CAH US Equity,Health Care
+CARR US Equity,Industrials
+CAT US Equity,Industrials
+CB US Equity,Financials
+CBOE UF Equity,Financials
+CBRE US Equity,Real Estate
+BA US Equity,Industrials
+BAC US Equity,Financials
+BALL US Equity,Materials
+BAX US Equity,Health Care
+BBY US Equity,Consumer Discretionary
+BDX US Equity,Health Care
+BEN US Equity,Financials
+BF/B US Equity,Consumer Staples
+BG US Equity,Consumer Staples
+BIIB US Equity,Health Care
+DECK US Equity,Consumer Discretionary
+DELL US Equity,Information Technology
+DG US Equity,Consumer Staples
+DGX US Equity,Health Care
+DHI US Equity,Consumer Discretionary
+DHR US Equity,Health Care
+DIS US Equity,Communication Services
+DLR US Equity,Real Estate
+DLTR US Equity,Consumer Staples
+DOC US Equity,Real Estate
+BK US Equity,Financials
+BKNG US Equity,Consumer Discretionary
+BKR US Equity,Energy
+BLDR US Equity,Industrials
+BLK US Equity,Financials
+BMY US Equity,Health Care
+BR US Equity,Industrials
+BRK/B US Equity,Financials
+BRO US Equity,Financials
+BSX US Equity,Health Care
+DOV US Equity,Industrials
+DOW US Equity,Materials
+DPZ US Equity,Consumer Discretionary
+DRI US Equity,Consumer Discretionary
+DTE US Equity,Utilities
+DUK US Equity,Utilities
+DVA US Equity,Health Care
+DVN US Equity,Energy
+DXCM US Equity,Health Care
+EA US Equity,Communication Services
+EMR US Equity,Industrials
+EOG US Equity,Energy
+EPAM US Equity,Information Technology
+EQIX US Equity,Real Estate
+EQR US Equity,Real Estate
+EQT US Equity,Energy
+ERIE US Equity,Financials
+ES US Equity,Utilities
+ESS US Equity,Real Estate
+ETN US Equity,Industrials
+CTVA US Equity,Materials
+CVS US Equity,Health Care
+CVX US Equity,Energy
+D US Equity,Utilities
+DAL US Equity,Industrials
+DASH US Equity,Consumer Discretionary
+DAY US Equity,Industrials
+DD US Equity,Materials
+DDOG US Equity,Information Technology
+DE US Equity,Industrials
+EBAY US Equity,Consumer Discretionary
+ECL US Equity,Materials
+ED US Equity,Utilities
+EFX US Equity,Industrials
+EG US Equity,Financials
+EIX US Equity,Utilities
+EL US Equity,Consumer Staples
+ELV US Equity,Health Care
+EME US Equity,Industrials
+EMN US Equity,Materials
+AMT US Equity,Real Estate
+AMZN US Equity,Consumer Discretionary
+ANET US Equity,Information Technology
+AON US Equity,Financials
+AOS US Equity,Industrials
+APA US Equity,Energy
+APD US Equity,Materials
+APH US Equity,Information Technology
+APO US Equity,Financials
+APP US Equity,Information Technology
+CI US Equity,Health Care
+CINF US Equity,Financials
+CL US Equity,Consumer Staples
+CLX US Equity,Consumer Staples
+CMCSA US Equity,Communication Services
+CME US Equity,Financials
+CMG US Equity,Consumer Discretionary
+CMI US Equity,Industrials
+CMS US Equity,Utilities
+CNC US Equity,Health Care
+APTV US Equity,Consumer Discretionary
+ARE US Equity,Real Estate
+ATO US Equity,Utilities
+AVB US Equity,Real Estate
+AVGO US Equity,Information Technology
+AVY US Equity,Materials
+AWK US Equity,Utilities
+AXON US Equity,Industrials
+AXP US Equity,Financials
+AZO US Equity,Consumer Discretionary
+CNP US Equity,Utilities
+COF US Equity,Financials
+COIN US Equity,Financials
+COO US Equity,Health Care
+COP US Equity,Energy
+COR US Equity,Health Care
+COST US Equity,Consumer Staples
+CPAY US Equity,Financials
+CPB US Equity,Consumer Staples
+CPRT US Equity,Industrials
+ALB US Equity,Materials
+ALGN US Equity,Health Care
+ALL US Equity,Financials
+ALLE US Equity,Industrials
+AMAT US Equity,Information Technology
+AMCR US Equity,Materials
+AMD US Equity,Information Technology
+AME US Equity,Industrials
+AMGN US Equity,Health Care
+AMP US Equity,Financials
+NWS US Equity,Communication Services
+NWSA US Equity,Communication Services
+NXPI US Equity,Information Technology
+O US Equity,Real Estate
+ODFL US Equity,Industrials
+KHC US Equity,Consumer Staples
+KIM US Equity,Real Estate
+KKR US Equity,Financials
+KLAC US Equity,Information Technology
+KMB US Equity,Consumer Staples
+KMI US Equity,Energy
+KMX US Equity,Consumer Discretionary
+KO US Equity,Consumer Staples
+KR US Equity,Consumer Staples
+KVUE US Equity,Consumer Staples
+JBHT US Equity,Industrials
+JBL US Equity,Information Technology
+JCI US Equity,Industrials
+JKHY US Equity,Financials
+JNJ US Equity,Health Care
+JPM US Equity,Financials
+K US Equity,Consumer Staples
+KDP US Equity,Consumer Staples
+KEY US Equity,Financials
+KEYS US Equity,Information Technology
+IBKR US Equity,Financials
+IBM US Equity,Information Technology
+ICE US Equity,Financials
+IDXX US Equity,Health Care
+IEX US Equity,Industrials
+IFF US Equity,Materials
+INCY US Equity,Health Care
+INTC US Equity,Information Technology
+INTU US Equity,Information Technology
+INVH US Equity,Real Estate
+MOS US Equity,Materials
+MPC US Equity,Energy
+MPWR US Equity,Information Technology
+MRK US Equity,Health Care
+MRNA US Equity,Health Care
+MS US Equity,Financials
+MSCI US Equity,Financials
+MSFT US Equity,Information Technology
+MSI US Equity,Information Technology
+MTB US Equity,Financials
+MTCH US Equity,Communication Services
+MTD US Equity,Health Care
+MU US Equity,Information Technology
+NCLH US Equity,Consumer Discretionary
+NDAQ US Equity,Financials
+NDSN US Equity,Industrials
+NEE US Equity,Utilities
+NEM US Equity,Materials
+NFLX US Equity,Communication Services
+NI US Equity,Utilities
+HOOD US Equity,Financials
+HPE US Equity,Information Technology
+HPQ US Equity,Information Technology
+HRL US Equity,Consumer Staples
+HSIC US Equity,Health Care
+HST US Equity,Real Estate
+HSY US Equity,Consumer Staples
+HUBB US Equity,Industrials
+HUM US Equity,Health Care
+HWM US Equity,Industrials
+FFIV US Equity,Information Technology
+FI US Equity,Financials
+FICO US Equity,Information Technology
+FIS US Equity,Financials
+FITB US Equity,Financials
+FOX US Equity,Communication Services
+FOXA US Equity,Communication Services
+FRT US Equity,Real Estate
+FSLR US Equity,Information Technology
+FTNT US Equity,Information Technology
+GLW US Equity,Information Technology
+GM US Equity,Consumer Discretionary
+GNRC US Equity,Industrials
+GOOG US Equity,Communication Services
+GOOGL US Equity,Communication Services
+GPC US Equity,Consumer Discretionary
+GPN US Equity,Financials
+GRMN US Equity,Consumer Discretionary
+GS US Equity,Financials
+GWW US Equity,Industrials
+FTV US Equity,Industrials
+GD US Equity,Industrials
+GDDY US Equity,Information Technology
+GE US Equity,Industrials
+GEHC US Equity,Health Care
+GEN US Equity,Information Technology
+GEV US Equity,Industrials
+GILD US Equity,Health Care
+GIS US Equity,Consumer Staples
+GL US Equity,Financials
+EXPD US Equity,Industrials
+EXPE US Equity,Consumer Discretionary
+EXR US Equity,Real Estate
+F US Equity,Consumer Discretionary
+FANG US Equity,Energy
+FAST US Equity,Industrials
+FCX US Equity,Materials
+FDS US Equity,Financials
+FDX US Equity,Industrials
+FE US Equity,Utilities
+LNT US Equity,Utilities
+LOW US Equity,Consumer Discretionary
+LRCX US Equity,Information Technology
+LULU US Equity,Consumer Discretionary
+LUV US Equity,Industrials
+LVS US Equity,Consumer Discretionary
+LW US Equity,Consumer Staples
+LYB US Equity,Materials
+LYV US Equity,Communication Services
+MA US Equity,Financials
+META US Equity,Communication Services
+MGM US Equity,Consumer Discretionary
+MHK US Equity,Consumer Discretionary
+MKC US Equity,Consumer Staples
+MLM US Equity,Materials
+MMC US Equity,Financials
+MMM US Equity,Industrials
+MNST US Equity,Consumer Staples
+MO US Equity,Consumer Staples
+MOH US Equity,Health Care
+HAL US Equity,Energy
+HAS US Equity,Consumer Discretionary
+HBAN US Equity,Financials
+HCA US Equity,Health Care
+HD US Equity,Consumer Discretionary
+HIG US Equity,Financials
+HII US Equity,Industrials
+HLT US Equity,Consumer Discretionary
+HOLX US Equity,Health Care
+HON US Equity,Industrials
+L US Equity,Financials
+LDOS US Equity,Industrials
+LEN US Equity,Consumer Discretionary
+LH US Equity,Health Care
+LHX US Equity,Industrials
+LII US Equity,Industrials
+LIN US Equity,Materials
+LKQ US Equity,Consumer Discretionary
+LLY US Equity,Health Care
+LMT US Equity,Industrials
+NKE US Equity,Consumer Discretionary
+NOC US Equity,Industrials
+NOW US Equity,Information Technology
+NRG US Equity,Utilities
+NSC US Equity,Industrials
+NTAP US Equity,Information Technology
+NTRS US Equity,Financials
+NUE US Equity,Materials
+NVDA US Equity,Information Technology
+NVR US Equity,Consumer Discretionary
+MAA US Equity,Real Estate
+MAR US Equity,Consumer Discretionary
+MAS US Equity,Industrials
+MCD US Equity,Consumer Discretionary
+MCHP US Equity,Information Technology
+MCK US Equity,Health Care
+MCO US Equity,Financials
+MDLZ US Equity,Consumer Staples
+MDT US Equity,Health Care
+MET US Equity,Financials
+IP US Equity,Materials
+IPG US Equity,Communication Services
+IQV US Equity,Health Care
+IR US Equity,Industrials
+IRM US Equity,Real Estate
+ISRG US Equity,Health Care
+IT US Equity,Information Technology
+ITW US Equity,Industrials
+IVZ US Equity,Financials
+J US Equity,Industrials
+ZBH US Equity,Health Care
+ZBRA US Equity,Information Technology
+ZTS US Equity,Health Care
+PPL US Equity,Utilities
+PRU US Equity,Financials
+PSA US Equity,Real Estate
+PSKY US Equity,Communication Services
+PSX US Equity,Energy
+PTC US Equity,Information Technology
+PWR US Equity,Industrials
+PYPL US Equity,Financials
+QCOM US Equity,Information Technology
+RCL US Equity,Consumer Discretionary
+RSG US Equity,Industrials
+RTX US Equity,Industrials
+RVTY US Equity,Health Care
+SBAC US Equity,Real Estate
+SBUX US Equity,Consumer Discretionary
+SCHW US Equity,Financials
+SHW US Equity,Materials
+SJM US Equity,Consumer Staples
+SLB US Equity,Energy
+SMCI US Equity,Information Technology
+REG US Equity,Real Estate
+REGN US Equity,Health Care
+RF US Equity,Financials
+RJF US Equity,Financials
+RL US Equity,Consumer Discretionary
+RMD US Equity,Health Care
+ROK US Equity,Industrials
+ROL US Equity,Industrials
+ROP US Equity,Information Technology
+ROST US Equity,Consumer Discretionary
+STX US Equity,Information Technology
+STZ US Equity,Consumer Staples
+SW US Equity,Materials
+SWK US Equity,Industrials
+SWKS US Equity,Information Technology
+SYF US Equity,Financials
+SYK US Equity,Health Care
+SYY US Equity,Consumer Staples
+T US Equity,Communication Services
+TAP US Equity,Consumer Staples
+OKE US Equity,Energy
+OMC US Equity,Communication Services
+ON US Equity,Information Technology
+ORCL US Equity,Information Technology
+ORLY US Equity,Consumer Discretionary
+OTIS US Equity,Industrials
+OXY US Equity,Energy
+PANW US Equity,Information Technology
+PAYC US Equity,Industrials
+PAYX US Equity,Industrials
+SNA US Equity,Industrials
+SNPS US Equity,Information Technology
+SO US Equity,Utilities
+SOLV US Equity,Health Care
+SPG US Equity,Real Estate
+SPGI US Equity,Financials
+SRE US Equity,Utilities
+STE US Equity,Health Care
+STLD US Equity,Materials
+STT US Equity,Financials
+PCAR US Equity,Industrials
+PCG US Equity,Utilities
+PEG US Equity,Utilities
+PEP US Equity,Consumer Staples
+PFE US Equity,Health Care
+PFG US Equity,Financials
+PG US Equity,Consumer Staples
+PGR US Equity,Financials
+PH US Equity,Industrials
+PHM US Equity,Consumer Discretionary
+WSM US Equity,Consumer Discretionary
+WST US Equity,Health Care
+WTW US Equity,Financials
+WY US Equity,Real Estate
+WYNN US Equity,Consumer Discretionary
+XEL US Equity,Utilities
+XOM US Equity,Energy
+XYL US Equity,Industrials
+XYZ US Equity,Financials
+YUM US Equity,Consumer Discretionary
+TT US Equity,Industrials
+TTD US Equity,Communication Services
+TTWO US Equity,Communication Services
+TXN US Equity,Information Technology
+TXT US Equity,Industrials
+TYL US Equity,Information Technology
+UAL US Equity,Industrials
+UBER US Equity,Industrials
+UDR US Equity,Real Estate
+UHS US Equity,Health Care
+TMUS US Equity,Communication Services
+TPL US Equity,Energy
+TPR US Equity,Consumer Discretionary
+TRGP US Equity,Energy
+TRMB US Equity,Information Technology
+TROW US Equity,Financials
+TRV US Equity,Financials
+TSCO US Equity,Consumer Discretionary
+TSLA US Equity,Consumer Discretionary
+TSN US Equity,Consumer Staples
+PKG US Equity,Materials
+PLD US Equity,Real Estate
+PLTR US Equity,Information Technology
+PM US Equity,Consumer Staples
+PNC US Equity,Financials
+PNR US Equity,Industrials
+PNW US Equity,Utilities
+PODD US Equity,Health Care
+POOL US Equity,Consumer Discretionary
+PPG US Equity,Materials
+VMC US Equity,Materials
+VRSK US Equity,Industrials
+VRSN US Equity,Information Technology
+VRTX US Equity,Health Care
+VST US Equity,Utilities
+VTR US Equity,Real Estate
+VTRS US Equity,Health Care
+VZ US Equity,Communication Services
+WAB US Equity,Industrials
+WAT US Equity,Health Care
+WBD US Equity,Communication Services
+WDAY US Equity,Information Technology
+WDC US Equity,Information Technology
+WEC US Equity,Utilities
+WELL US Equity,Real Estate
+WFC US Equity,Financials
+WM US Equity,Industrials
+WMB US Equity,Energy
+WMT US Equity,Consumer Staples
+WRB US Equity,Financials
+TDG US Equity,Industrials
+TDY US Equity,Information Technology
+TECH US Equity,Health Care
+TEL US Equity,Information Technology
+TER US Equity,Information Technology
+TFC US Equity,Financials
+TGT US Equity,Consumer Staples
+TJX US Equity,Consumer Discretionary
+TKO US Equity,Communication Services
+TMO US Equity,Health Care
+ULTA US Equity,Consumer Discretionary
+UNH US Equity,Health Care
+UNP US Equity,Industrials
+UPS US Equity,Industrials
+URI US Equity,Industrials
+USB US Equity,Financials
+V US Equity,Financials
+VICI US Equity,Real Estate
+VLO US Equity,Energy
+VLTO US Equity,Industrials
