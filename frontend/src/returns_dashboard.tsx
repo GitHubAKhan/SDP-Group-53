@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import "./dashboard.css";
 
-// Example portfolio returns (replace with real later)
+// Example portfolio returns
 const portfolioReturns = {
   "1D": 1.2,
   "1W": 3.5,
