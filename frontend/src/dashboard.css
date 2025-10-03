@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #aaa;
+  margin-bottom: 2rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.tab {
+  background: #222;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #aaa;
+}
+.tab.active {
+  background: #fff;
+  color: #000;
+}
+.tab:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* KPI Cards */
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 2rem;
+}
+.card {
+  flex: 1;
+  background: #1b1b1b;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+.card h3 {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 0.5rem;
+}
+.card .value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+.card span {
+  font-size: 0.85rem;
+  color: #777;
+}
+.portfolio .value {
+  color: #4ea5ff;
+}
+.benchmark .value {
+  color: #aaa;
+}
+.positive .value {
+  color: #3be66c;
+}
+.negative .value {
+  color: #ff4b4b;
+}
+
+/* Chart */
+.chart {
+  background: #141414;
+  border-radius: 12px;
+  padding: 30px;
+  margin-top: 20px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+.chart h2 {
+  margin-bottom: 1rem;
+}
