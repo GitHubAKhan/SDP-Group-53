@@ -1,0 +1,461 @@
+{
+  "capital": 100000.0,
+  "cash": 6176.008327484131,
+  "positions": {
+    "RL US Equity": 4,
+    "CBRE US Equity": 13,
+    "BA US Equity": 8,
+    "ETR US Equity": 30,
+    "DASH US Equity": 7,
+    "MCK US Equity": 3,
+    "MO US Equity": 46,
+    "INCY US Equity": 23,
+    "CAH US Equity": 16,
+    "C US Equity": 24,
+    "PLTR US Equity": 7,
+    "EXE US Equity": 20,
+    "PM US Equity": 11,
+    "NRG US Equity": 8,
+    "COIN US Equity": 2,
+    "DLTR US Equity": 12,
+    "TPR US Equity": 18,
+    "TKO US Equity": 8,
+    "PODD US Equity": 5,
+    "CTVA US Equity": 26,
+    "HOOD US Equity": 4,
+    "APP US Equity": 1,
+    "DG US Equity": 16,
+    "JCI US Equity": 23,
+    "AXON US Equity": 2,
+    "EME US Equity": 3,
+    "AVGO US Equity": 2,
+    "CRWD US Equity": 1,
+    "GILD US Equity": 19,
+    "JBL US Equity": 8,
+    "COR US Equity": 6,
+    "MS US Equity": 16,
+    "GE US Equity": 6,
+    "CSGP US Equity": 21,
+    "RCL US Equity": 3,
+    "MOS US Equity": 61,
+    "EQT US Equity": 39,
+    "CEG US Equity": 3,
+    "GS US Equity": 2,
+    "SCHW US Equity": 17,
+    "COF US Equity": 8,
+    "GEV US Equity": 1,
+    "HWM US Equity": 9,
+    "NEM US Equity": 22,
+    "CCL US Equity": 42,
+    "WELL US Equity": 20,
+    "UAL US Equity": 16,
+    "WMB US Equity": 40,
+    "NFLX US Equity": 1,
+    "VTR US Equity": 40,
+    "STX US Equity": 5,
+    "LYV US Equity": 12,
+    "VST US Equity": 5,
+    "APH US Equity": 12,
+    "IBKR US Equity": 18
+  },
+  "nav_history": [
+    {
+      "date": "2025-10-03T14:11:42.191406",
+      "nav": 100007.98091888428,
+      "cash": 6176.008327484131,
+      "num_positions": 55
+    }
+  ],
+  "trade_history": [
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "RL US Equity",
+      "shares": 4,
+      "price": 323.427001953125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CBRE US Equity",
+      "shares": 13,
+      "price": 156.48500061035156,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "BA US Equity",
+      "shares": 8,
+      "price": 215.7899932861328,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "ETR US Equity",
+      "shares": 30,
+      "price": 95.83000183105469,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "DASH US Equity",
+      "shares": 7,
+      "price": 271.4100036621094,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "MCK US Equity",
+      "shares": 3,
+      "price": 746.9249877929688,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "MO US Equity",
+      "shares": 46,
+      "price": 65.94000244140625,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "INCY US Equity",
+      "shares": 23,
+      "price": 86.83000183105469,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CAH US Equity",
+      "shares": 16,
+      "price": 157.0,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "C US Equity",
+      "shares": 24,
+      "price": 97.75,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "PLTR US Equity",
+      "shares": 7,
+      "price": 172.47650146484375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "EXE US Equity",
+      "shares": 20,
+      "price": 108.1500015258789,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "PM US Equity",
+      "shares": 11,
+      "price": 152.65499877929688,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "NRG US Equity",
+      "shares": 8,
+      "price": 166.7100067138672,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "COIN US Equity",
+      "shares": 2,
+      "price": 373.8800048828125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "DLTR US Equity",
+      "shares": 12,
+      "price": 89.38999938964844,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "TPR US Equity",
+      "shares": 18,
+      "price": 115.7699966430664,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "TKO US Equity",
+      "shares": 8,
+      "price": 197.66000366210938,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "PODD US Equity",
+      "shares": 5,
+      "price": 309.75,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CTVA US Equity",
+      "shares": 26,
+      "price": 63.470001220703125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "HOOD US Equity",
+      "shares": 4,
+      "price": 147.42999267578125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "APP US Equity",
+      "shares": 1,
+      "price": 679.9349975585938,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "DG US Equity",
+      "shares": 16,
+      "price": 100.0,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "JCI US Equity",
+      "shares": 23,
+      "price": 108.77649688720703,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "AXON US Equity",
+      "shares": 2,
+      "price": 720.8499755859375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "EME US Equity",
+      "shares": 3,
+      "price": 656.3699951171875,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "AVGO US Equity",
+      "shares": 2,
+      "price": 337.1199951171875,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CRWD US Equity",
+      "shares": 1,
+      "price": 489.30999755859375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "GILD US Equity",
+      "shares": 19,
+      "price": 113.3499984741211,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "JBL US Equity",
+      "shares": 8,
+      "price": 203.5500030517578,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "COR US Equity",
+      "shares": 6,
+      "price": 305.92498779296875,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "MS US Equity",
+      "shares": 16,
+      "price": 157.0399932861328,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "GE US Equity",
+      "shares": 6,
+      "price": 298.0299987792969,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CSGP US Equity",
+      "shares": 21,
+      "price": 84.75,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "RCL US Equity",
+      "shares": 3,
+      "price": 317.17999267578125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "MOS US Equity",
+      "shares": 61,
+      "price": 34.5099983215332,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "EQT US Equity",
+      "shares": 39,
+      "price": 56.36000061035156,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CEG US Equity",
+      "shares": 3,
+      "price": 361.54998779296875,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "GS US Equity",
+      "shares": 2,
+      "price": 788.6599731445312,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "SCHW US Equity",
+      "shares": 17,
+      "price": 93.91999816894531,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "COF US Equity",
+      "shares": 8,
+      "price": 213.6999969482422,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "GEV US Equity",
+      "shares": 1,
+      "price": 591.3900146484375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "HWM US Equity",
+      "shares": 9,
+      "price": 189.42999267578125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "NEM US Equity",
+      "shares": 22,
+      "price": 86.97000122070312,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "CCL US Equity",
+      "shares": 42,
+      "price": 28.76129913330078,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "WELL US Equity",
+      "shares": 20,
+      "price": 176.14999389648438,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "UAL US Equity",
+      "shares": 16,
+      "price": 95.5,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "WMB US Equity",
+      "shares": 40,
+      "price": 64.87000274658203,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "NFLX US Equity",
+      "shares": 1,
+      "price": 1152.72119140625,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "VTR US Equity",
+      "shares": 40,
+      "price": 70.33999633789062,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "STX US Equity",
+      "shares": 5,
+      "price": 254.94970703125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "LYV US Equity",
+      "shares": 12,
+      "price": 155.2899932861328,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "VST US Equity",
+      "shares": 5,
+      "price": 203.64100646972656,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "APH US Equity",
+      "shares": 12,
+      "price": 122.88999938964844,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T14:11:39.434894",
+      "ticker": "IBKR US Equity",
+      "shares": 18,
+      "price": 70.56999969482422,
+      "side": "BUY"
+    }
+  ],
+  "last_rebalance": "2025-10-03T14:11:42.191406",
+  "initialized": true,
+  "start_date": "2025-10-03T14:10:18.534772",
+  "last_updated": "2025-10-03T14:11:42.191406",
+  "nav": 100007.81425476074
+}

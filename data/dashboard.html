@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentum Strategy Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #38444d;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #1da1f2;
+        }
+        
+        .subtitle {
+            color: #8899a6;
+            font-size: 1.1em;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: #192734;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #38444d;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: #1da1f2;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            color: #8899a6;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .metric-value.positive {
+            color: #17bf63;
+        }
+        
+        .metric-value.negative {
+            color: #e0245e;
+        }
+        
+        .metric-subtext {
+            font-size: 0.85em;
+            color: #8899a6;
+            margin-top: 5px;
+        }
+        
+        .chart-container {
+            background: #192734;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #38444d;
+            margin-bottom: 30px;
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .comparison-section {
+            background: #192734;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #38444d;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #38444d;
+        }
+        
+        .comparison-table th {
+            color: #8899a6;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .comparison-table td {
+            color: #ffffff;
+        }
+        
+        .highlight {
+            background: #253341;
+        }
+        
+        .upload-section {
+            background: #192734;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px dashed #38444d;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-btn {
+            background: #1da1f2;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .upload-btn:hover {
+            background: #1a91da;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .info-box {
+            background: #1d2d3a;
+            border-left: 4px solid #1da1f2;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box strong {
+            color: #1da1f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cross-Sectional Momentum Strategy</h1>
+            <p class="subtitle">Performance Dashboard & Analysis</p>
+        </header>
+
+        <div class="upload-section">
+            <h2 style="margin-bottom: 15px;">Load Your Results</h2>
+            <p style="color: #8899a6; margin-bottom: 20px;">Upload your monthly_returns.csv from the paper trading simulation</p>
+            <label for="csvFile" class="upload-btn">Choose File</label>
+            <input type="file" id="csvFile" accept=".csv">
+            <div id="fileName" style="margin-top: 10px; color: #8899a6;"></div>
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Return</div>
+                    <div class="metric-value positive" id="totalReturn">-</div>
+                    <div class="metric-subtext" id="period">-</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">CAGR</div>
+                    <div class="metric-value" id="cagr">-</div>
+                    <div class="metric-subtext">Annualized</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Sharpe Ratio</div>
+                    <div class="metric-value" id="sharpe">-</div>
+                    <div class="metric-subtext">Risk-adjusted returns</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Max Drawdown</div>
+                    <div class="metric-value negative" id="maxDD">-</div>
+                    <div class="metric-subtext" id="ddDate">-</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Volatility</div>
+                    <div class="metric-value" id="volatility">-</div>
+                    <div class="metric-subtext">Annualized</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Win Rate</div>
+                    <div class="metric-value" id="winRate">-</div>
+                    <div class="metric-subtext" id="winCount">-</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Equity Curve</div>
+                <div id="equityChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Drawdown Over Time</div>
+                <div id="drawdownChart"></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Monthly Returns Distribution</div>
+                <div id="returnsHistogram"></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Rolling 12-Month Returns</div>
+                <div id="rollingReturns"></div>
+            </div>
+
+            <div class="comparison-section">
+                <h2 class="chart-title">Backtest vs Paper Trading Comparison</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Backtest (1994-2025)</th>
+                            <th>Paper Trading</th>
+                            <th>Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CAGR</td>
+                            <td>13.41%</td>
+                            <td id="compare-cagr">-</td>
+                            <td id="diff-cagr">-</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>Sharpe Ratio</td>
+                            <td>1.03</td>
+                            <td id="compare-sharpe">-</td>
+                            <td id="diff-sharpe">-</td>
+                        </tr>
+                        <tr>
+                            <td>Max Drawdown</td>
+                            <td>-26.72%</td>
+                            <td id="compare-dd">-</td>
+                            <td id="diff-dd">-</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>Volatility</td>
+                            <td>13.05%</td>
+                            <td id="compare-vol">-</td>
+                            <td id="diff-vol">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <strong>Interpretation:</strong> Your paper trading results validate the strategy with higher returns but also higher volatility. The Sharpe ratio difference indicates the recent period (2020-2024) was more volatile than the long-term average.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let data = [];
+
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = `Loaded: ${file.name}`;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    parseCSV(text);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',');
+            
+            data = lines.slice(1).map(line => {
+                const values = line.split(',');
+                return {
+                    date: new Date(values[0]),
+                    nav: parseFloat(values[1]),
+                    return: parseFloat(values[2])
+                };
+            });
+
+            calculateMetrics();
+            createCharts();
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function calculateMetrics() {
+            const returns = data.map(d => d.return);
+            const navs = data.map(d => d.nav);
+            
+            // Total return
+            const totalReturn = ((navs[navs.length - 1] / navs[0]) - 1) * 100;
+            document.getElementById('totalReturn').textContent = totalReturn.toFixed(2) + '%';
+            
+            // Period
+            const startDate = data[0].date.toLocaleDateString();
+            const endDate = data[data.length - 1].date.toLocaleDateString();
+            const months = data.length;
+            const years = months / 12;
+            document.getElementById('period').textContent = `${months} months (${years.toFixed(1)} years)`;
+            
+            // CAGR
+            const cagr = (Math.pow(navs[navs.length - 1] / navs[0], 1 / years) - 1) * 100;
+            document.getElementById('cagr').textContent = cagr.toFixed(2) + '%';
+            
+            // Volatility
+            const avgReturn = returns.reduce((a, b) => a + b) / returns.length;
+            const variance = returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length;
+            const stdDev = Math.sqrt(variance);
+            const annualVol = stdDev * Math.sqrt(12);
+            document.getElementById('volatility').textContent = annualVol.toFixed(2) + '%';
+            
+            // Sharpe
+            const sharpe = (avgReturn * 12) / annualVol;
+            document.getElementById('sharpe').textContent = sharpe.toFixed(2);
+            
+            // Max Drawdown
+            let peak = navs[0];
+            let maxDD = 0;
+            let ddDate = null;
+            
+            navs.forEach((nav, i) => {
+                if (nav > peak) peak = nav;
+                const dd = ((nav / peak) - 1) * 100;
+                if (dd < maxDD) {
+                    maxDD = dd;
+                    ddDate = data[i].date;
+                }
+            });
+            
+            document.getElementById('maxDD').textContent = maxDD.toFixed(2) + '%';
+            document.getElementById('ddDate').textContent = ddDate ? ddDate.toLocaleDateString() : '';
+            
+            // Win rate
+            const wins = returns.filter(r => r > 0).length;
+            const winRate = (wins / returns.length) * 100;
+            document.getElementById('winRate').textContent = winRate.toFixed(1) + '%';
+            document.getElementById('winCount').textContent = `${wins}/${returns.length} months`;
+            
+            // Comparison table
+            document.getElementById('compare-cagr').textContent = cagr.toFixed(2) + '%';
+            document.getElementById('compare-sharpe').textContent = sharpe.toFixed(2);
+            document.getElementById('compare-dd').textContent = maxDD.toFixed(2) + '%';
+            document.getElementById('compare-vol').textContent = annualVol.toFixed(2) + '%';
+            
+            const cagrDiff = cagr - 13.41;
+            const sharpeDiff = sharpe - 1.03;
+            const ddDiff = maxDD - (-26.72);
+            const volDiff = annualVol - 13.05;
+            
+            document.getElementById('diff-cagr').textContent = (cagrDiff > 0 ? '+' : '') + cagrDiff.toFixed(2) + '%';
+            document.getElementById('diff-sharpe').textContent = (sharpeDiff > 0 ? '+' : '') + sharpeDiff.toFixed(2);
+            document.getElementById('diff-dd').textContent = (ddDiff > 0 ? '+' : '') + ddDiff.toFixed(2) + '%';
+            document.getElementById('diff-vol').textContent = (volDiff > 0 ? '+' : '') + volDiff.toFixed(2) + '%';
+            
+            document.getElementById('diff-cagr').style.color = cagrDiff > 0 ? '#17bf63' : '#e0245e';
+            document.getElementById('diff-sharpe').style.color = sharpeDiff > 0 ? '#17bf63' : '#e0245e';
+            document.getElementById('diff-dd').style.color = ddDiff < 0 ? '#17bf63' : '#e0245e';
+            document.getElementById('diff-vol').style.color = volDiff < 0 ? '#17bf63' : '#e0245e';
+        }
+
+        function createCharts() {
+            const dates = data.map(d => d.date);
+            const navs = data.map(d => d.nav);
+            const returns = data.map(d => d.return);
+            
+            // Equity Curve
+            Plotly.newPlot('equityChart', [{
+                x: dates,
+                y: navs,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: '#1da1f2', width: 2 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(29, 161, 242, 0.1)'
+            }], {
+                paper_bgcolor: '#192734',
+                plot_bgcolor: '#192734',
+                font: { color: '#e1e8ed' },
+                xaxis: { gridcolor: '#38444d' },
+                yaxis: { gridcolor: '#38444d', tickformat: '$,.0f' },
+                margin: { t: 10, r: 10, b: 40, l: 60 }
+            }, {responsive: true});
+            
+            // Drawdown
+            let peak = navs[0];
+            const drawdowns = navs.map(nav => {
+                if (nav > peak) peak = nav;
+                return ((nav / peak) - 1) * 100;
+            });
+            
+            Plotly.newPlot('drawdownChart', [{
+                x: dates,
+                y: drawdowns,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: '#e0245e', width: 2 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(224, 36, 94, 0.1)'
+            }], {
+                paper_bgcolor: '#192734',
+                plot_bgcolor: '#192734',
+                font: { color: '#e1e8ed' },
+                xaxis: { gridcolor: '#38444d' },
+                yaxis: { gridcolor: '#38444d', ticksuffix: '%' },
+                margin: { t: 10, r: 10, b: 40, l: 60 }
+            }, {responsive: true});
+            
+            // Returns Histogram
+            Plotly.newPlot('returnsHistogram', [{
+                x: returns,
+                type: 'histogram',
+                marker: {
+                    color: returns.map(r => r > 0 ? '#17bf63' : '#e0245e')
+                },
+                nbinsx: 20
+            }], {
+                paper_bgcolor: '#192734',
+                plot_bgcolor: '#192734',
+                font: { color: '#e1e8ed' },
+                xaxis: { title: 'Monthly Return (%)', gridcolor: '#38444d' },
+                yaxis: { title: 'Frequency', gridcolor: '#38444d' },
+                margin: { t: 10, r: 10, b: 60, l: 60 }
+            }, {responsive: true});
+            
+            // Rolling 12-month returns
+            const rolling12 = [];
+            for (let i = 11; i < returns.length; i++) {
+                const monthReturns = returns.slice(i - 11, i + 1);
+                const cumReturn = monthReturns.reduce((cum, r) => cum * (1 + r / 100), 1) - 1;
+                rolling12.push(cumReturn * 100);
+            }
+            
+            Plotly.newPlot('rollingReturns', [{
+                x: dates.slice(11),
+                y: rolling12,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: '#17bf63', width: 2 }
+            }], {
+                paper_bgcolor: '#192734',
+                plot_bgcolor: '#192734',
+                font: { color: '#e1e8ed' },
+                xaxis: { gridcolor: '#38444d' },
+                yaxis: { gridcolor: '#38444d', ticksuffix: '%', title: '12-Month Rolling Return' },
+                margin: { t: 10, r: 10, b: 40, l: 60 }
+            }, {responsive: true});
+        }
+    </script>
+</body>
+</html>

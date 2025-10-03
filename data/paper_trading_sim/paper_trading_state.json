@@ -1,0 +1,1450 @@
+{
+  "positions": {
+    "WST US Equity": {
+      "shares": 12,
+      "cost_basis": 156.1369,
+      "entry_date": "2020-02-03"
+    },
+    "HLT US Equity": {
+      "shares": 1,
+      "cost_basis": 106.4117,
+      "entry_date": "2020-02-03"
+    },
+    "CSGP US Equity": {
+      "shares": 20,
+      "cost_basis": 65.981,
+      "entry_date": "2020-02-03"
+    },
+    "AMD US Equity": {
+      "shares": 22,
+      "cost_basis": 48.02,
+      "entry_date": "2020-02-03"
+    },
+    "PODD US Equity": {
+      "shares": 7,
+      "cost_basis": 194.84,
+      "entry_date": "2020-02-03"
+    },
+    "BX US Equity": {
+      "shares": 38,
+      "cost_basis": 49.0964447368421,
+      "entry_date": "2020-02-03"
+    },
+    "BLDR US Equity": {
+      "shares": 49,
+      "cost_basis": 24.645,
+      "entry_date": "2020-02-03"
+    },
+    "APO US Equity": {
+      "shares": 62,
+      "cost_basis": 38.2216564516129,
+      "entry_date": "2020-02-03"
+    },
+    "MCO US Equity": {
+      "shares": 8,
+      "cost_basis": 248.7683,
+      "entry_date": "2020-02-03"
+    },
+    "MLM US Equity": {
+      "shares": 8,
+      "cost_basis": 253.3195,
+      "entry_date": "2020-02-03"
+    },
+    "KMX US Equity": {
+      "shares": 22,
+      "cost_basis": 93.85090909090908,
+      "entry_date": "2020-02-03"
+    },
+    "ZTS US Equity": {
+      "shares": 19,
+      "cost_basis": 129.97332631578948,
+      "entry_date": "2020-02-03"
+    },
+    "BRO US Equity": {
+      "shares": 56,
+      "cost_basis": 43.80330357142857,
+      "entry_date": "2020-02-03"
+    },
+    "HWM US Equity": {
+      "shares": 73,
+      "cost_basis": 25.28326575342466,
+      "entry_date": "2020-02-03"
+    },
+    "PAYC US Equity": {
+      "shares": 4,
+      "cost_basis": 317.7825,
+      "entry_date": "2020-02-03"
+    },
+    "LULU US Equity": {
+      "shares": 7,
+      "cost_basis": 246.37,
+      "entry_date": "2020-02-03"
+    },
+    "CPRT US Equity": {
+      "shares": 84,
+      "cost_basis": 25.2,
+      "entry_date": "2020-02-03"
+    },
+    "QCOM US Equity": {
+      "shares": 21,
+      "cost_basis": 74.61002857142856,
+      "entry_date": "2020-02-03"
+    },
+    "KMI US Equity": {
+      "shares": 165,
+      "cost_basis": 14.749141212121211,
+      "entry_date": "2020-02-03"
+    },
+    "TER US Equity": {
+      "shares": 25,
+      "cost_basis": 63.05186799999999,
+      "entry_date": "2020-02-03"
+    },
+    "NEE US Equity": {
+      "shares": 47,
+      "cost_basis": 57.903,
+      "entry_date": "2020-02-03"
+    },
+    "CHTR US Equity": {
+      "shares": 4,
+      "cost_basis": 523.3199999999999,
+      "entry_date": "2020-02-03"
+    },
+    "SPGI US Equity": {
+      "shares": 8,
+      "cost_basis": 281.841,
+      "entry_date": "2020-02-03"
+    },
+    "TDG US Equity": {
+      "shares": 4,
+      "cost_basis": 542.137,
+      "entry_date": "2020-02-03"
+    },
+    "MSCI US Equity": {
+      "shares": 6,
+      "cost_basis": 280.3147666666667,
+      "entry_date": "2020-02-03"
+    },
+    "OKE US Equity": {
+      "shares": 42,
+      "cost_basis": 51.2935,
+      "entry_date": "2020-02-03"
+    },
+    "LDOS US Equity": {
+      "shares": 13,
+      "cost_basis": 94.8227,
+      "entry_date": "2020-02-03"
+    },
+    "ETR US Equity": {
+      "shares": 58,
+      "cost_basis": 53.4507,
+      "entry_date": "2020-02-03"
+    },
+    "TGT US Equity": {
+      "shares": 23,
+      "cost_basis": 96.13320434782608,
+      "entry_date": "2020-02-03"
+    },
+    "GNRC US Equity": {
+      "shares": 12,
+      "cost_basis": 103.74,
+      "entry_date": "2020-02-03"
+    },
+    "EQIX US Equity": {
+      "shares": 4,
+      "cost_basis": 543.23,
+      "entry_date": "2020-02-03"
+    },
+    "EIX US Equity": {
+      "shares": 1,
+      "cost_basis": 60.3895,
+      "entry_date": "2020-02-03"
+    },
+    "RMD US Equity": {
+      "shares": 14,
+      "cost_basis": 156.1802142857143,
+      "entry_date": "2020-02-03"
+    },
+    "AAPL US Equity": {
+      "shares": 22,
+      "cost_basis": 74.1442,
+      "entry_date": "2020-02-03"
+    },
+    "DXCM US Equity": {
+      "shares": 16,
+      "cost_basis": 59.2725,
+      "entry_date": "2020-02-03"
+    },
+    "GPN US Equity": {
+      "shares": 12,
+      "cost_basis": 188.93139999999997,
+      "entry_date": "2020-02-03"
+    },
+    "CAG US Equity": {
+      "shares": 82,
+      "cost_basis": 25.17285243902439,
+      "entry_date": "2020-02-03"
+    },
+    "LRCX US Equity": {
+      "shares": 45,
+      "cost_basis": 28.734806666666664,
+      "entry_date": "2020-02-03"
+    },
+    "NVDA US Equity": {
+      "shares": 137,
+      "cost_basis": 6.8845,
+      "entry_date": "2020-03-02"
+    },
+    "SHW US Equity": {
+      "shares": 13,
+      "cost_basis": 170.96,
+      "entry_date": "2020-03-02"
+    },
+    "COST US Equity": {
+      "shares": 8,
+      "cost_basis": 283.631,
+      "entry_date": "2020-03-02"
+    },
+    "DVA US Equity": {
+      "shares": 21,
+      "cost_basis": 82.23,
+      "entry_date": "2020-03-02"
+    },
+    "NEM US Equity": {
+      "shares": 42,
+      "cost_basis": 39.4078,
+      "entry_date": "2020-03-02"
+    },
+    "FICO US Equity": {
+      "shares": 4,
+      "cost_basis": 387.06,
+      "entry_date": "2020-03-02"
+    },
+    "PLD US Equity": {
+      "shares": 25,
+      "cost_basis": 75.3508,
+      "entry_date": "2020-03-02"
+    },
+    "VLO US Equity": {
+      "shares": 24,
+      "cost_basis": 54.0938,
+      "entry_date": "2020-03-02"
+    },
+    "SBAC US Equity": {
+      "shares": 6,
+      "cost_basis": 265.528,
+      "entry_date": "2020-03-02"
+    },
+    "SO US Equity": {
+      "shares": 48,
+      "cost_basis": 51.5863,
+      "entry_date": "2020-03-02"
+    },
+    "DHI US Equity": {
+      "shares": 39,
+      "cost_basis": 51.8565,
+      "entry_date": "2020-03-02"
+    },
+    "AXON US Equity": {
+      "shares": 20,
+      "cost_basis": 82.34,
+      "entry_date": "2020-03-02"
+    },
+    "MA US Equity": {
+      "shares": 5,
+      "cost_basis": 297.365,
+      "entry_date": "2020-03-02"
+    },
+    "BF/B US Equity": {
+      "shares": 42,
+      "cost_basis": 58.2756,
+      "entry_date": "2020-03-02"
+    },
+    "TTWO US Equity": {
+      "shares": 10,
+      "cost_basis": 112.06,
+      "entry_date": "2020-03-02"
+    },
+    "PHM US Equity": {
+      "shares": 57,
+      "cost_basis": 39.1529,
+      "entry_date": "2020-03-02"
+    },
+    "TSLA US Equity": {
+      "shares": 10,
+      "cost_basis": 49.5747,
+      "entry_date": "2020-03-02"
+    }
+  },
+  "cash": 690.3966999999943,
+  "nav_history": [
+    {
+      "date": "2020-02-03",
+      "nav": 99991.84000000001,
+      "cash": 2191.0572999999954,
+      "positions_value": 97800.78270000001,
+      "num_positions": 53
+    },
+    {
+      "date": "2020-03-02",
+      "nav": 96212.94520000002,
+      "cash": 690.3966999999943,
+      "positions_value": 95522.54850000002,
+      "num_positions": 55
+    }
+  ],
+  "trade_log": [
+    {
+      "date": "2020-02-03",
+      "ticker": "WST US Equity",
+      "side": "BUY",
+      "shares": 18,
+      "price": 156.1369,
+      "commission": 0.09,
+      "slippage_pct": 1.5005002317512919,
+      "reference_price": 153.8287
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "HLT US Equity",
+      "side": "BUY",
+      "shares": 13,
+      "price": 106.4117,
+      "commission": 0.065,
+      "slippage_pct": 0.04635096613089056,
+      "reference_price": 106.3624
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "APD US Equity",
+      "side": "BUY",
+      "shares": 7,
+      "price": 213.0133,
+      "commission": 0.035,
+      "slippage_pct": 1.8013411130827506,
+      "reference_price": 209.2441
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CSGP US Equity",
+      "side": "BUY",
+      "shares": 29,
+      "price": 65.981,
+      "commission": 0.145,
+      "slippage_pct": 1.0444264077550773,
+      "reference_price": 65.299
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "BBY US Equity",
+      "side": "BUY",
+      "shares": 30,
+      "price": 67.9516,
+      "commission": 0.15,
+      "slippage_pct": 0.6730639595954261,
+      "reference_price": 67.4973
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "PSX US Equity",
+      "side": "BUY",
+      "shares": 19,
+      "price": 70.0429,
+      "commission": 0.095,
+      "slippage_pct": 2.6266364345363558,
+      "reference_price": 71.9323
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "AMD US Equity",
+      "side": "BUY",
+      "shares": 22,
+      "price": 48.02,
+      "commission": 0.11,
+      "slippage_pct": 2.1702127659574537,
+      "reference_price": 47.0
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "PODD US Equity",
+      "side": "BUY",
+      "shares": 10,
+      "price": 194.84,
+      "commission": 0.05,
+      "slippage_pct": 0.41228612657184677,
+      "reference_price": 194.04
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "DHR US Equity",
+      "side": "BUY",
+      "shares": 12,
+      "price": 139.4715,
+      "commission": 0.06,
+      "slippage_pct": 0.08079857117126087,
+      "reference_price": 139.3589
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "VMC US Equity",
+      "side": "BUY",
+      "shares": 16,
+      "price": 137.557,
+      "commission": 0.08,
+      "slippage_pct": 2.0611519598750485,
+      "reference_price": 134.779
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "BX US Equity",
+      "side": "BUY",
+      "shares": 31,
+      "price": 49.6943,
+      "commission": 0.155,
+      "slippage_pct": 0.9007697523232211,
+      "reference_price": 50.146
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "BLDR US Equity",
+      "side": "BUY",
+      "shares": 54,
+      "price": 24.645,
+      "commission": 0.27,
+      "slippage_pct": 0.6049606775559675,
+      "reference_price": 24.795
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "TSN US Equity",
+      "side": "BUY",
+      "shares": 23,
+      "price": 70.3458,
+      "commission": 0.115,
+      "slippage_pct": 0.7745852380413482,
+      "reference_price": 69.8051
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "APO US Equity",
+      "side": "BUY",
+      "shares": 23,
+      "price": 39.143,
+      "commission": 0.115,
+      "slippage_pct": 2.916257428296483,
+      "reference_price": 40.3188
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "MCO US Equity",
+      "side": "BUY",
+      "shares": 8,
+      "price": 248.7683,
+      "commission": 0.04,
+      "slippage_pct": 1.6433758726386856,
+      "reference_price": 244.7462
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "MLM US Equity",
+      "side": "BUY",
+      "shares": 6,
+      "price": 261.704,
+      "commission": 0.03,
+      "slippage_pct": 3.2489180136426996,
+      "reference_price": 253.469
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CDW US Equity",
+      "side": "BUY",
+      "shares": 12,
+      "price": 124.1293,
+      "commission": 0.06,
+      "slippage_pct": 1.870494977025052,
+      "reference_price": 121.8501
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "KMX US Equity",
+      "side": "BUY",
+      "shares": 17,
+      "price": 95.06,
+      "commission": 0.085,
+      "slippage_pct": 2.040395713108001,
+      "reference_price": 97.04
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "ACGL US Equity",
+      "side": "BUY",
+      "shares": 65,
+      "price": 42.4862,
+      "commission": 0.325,
+      "slippage_pct": 1.1776136712731207,
+      "reference_price": 41.9917
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "ZTS US Equity",
+      "side": "BUY",
+      "shares": 16,
+      "price": 129.462,
+      "commission": 0.08,
+      "slippage_pct": 0.9761291001906967,
+      "reference_price": 128.2105
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "BRO US Equity",
+      "side": "BUY",
+      "shares": 33,
+      "price": 43.8369,
+      "commission": 0.165,
+      "slippage_pct": 1.581295114066902,
+      "reference_price": 43.1545
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "HWM US Equity",
+      "side": "BUY",
+      "shares": 41,
+      "price": 25.3168,
+      "commission": 0.20500000000000002,
+      "slippage_pct": 0.3675056790926165,
+      "reference_price": 25.2241
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "PAYC US Equity",
+      "side": "BUY",
+      "shares": 4,
+      "price": 317.7825,
+      "commission": 0.02,
+      "slippage_pct": 1.6689925769230038,
+      "reference_price": 312.5658
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "LULU US Equity",
+      "side": "BUY",
+      "shares": 7,
+      "price": 246.37,
+      "commission": 0.035,
+      "slippage_pct": 2.9157441831321353,
+      "reference_price": 239.39
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "KLAC US Equity",
+      "side": "BUY",
+      "shares": 7,
+      "price": 158.42,
+      "commission": 0.035,
+      "slippage_pct": 2.5239451203727525,
+      "reference_price": 154.52
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CPRT US Equity",
+      "side": "BUY",
+      "shares": 123,
+      "price": 25.2,
+      "commission": 0.615,
+      "slippage_pct": 0.6505026611472468,
+      "reference_price": 25.365
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "QCOM US Equity",
+      "side": "BUY",
+      "shares": 15,
+      "price": 76.0984,
+      "commission": 0.075,
+      "slippage_pct": 1.3714068009521903,
+      "reference_price": 75.0689
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "INVH US Equity",
+      "side": "BUY",
+      "shares": 96,
+      "price": 26.9378,
+      "commission": 0.48,
+      "slippage_pct": 0.19081636055770534,
+      "reference_price": 26.9893
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "DAY US Equity",
+      "side": "BUY",
+      "shares": 27,
+      "price": 75.05,
+      "commission": 0.135,
+      "slippage_pct": 2.4014190203301826,
+      "reference_price": 73.29
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "KMI US Equity",
+      "side": "BUY",
+      "shares": 124,
+      "price": 14.8502,
+      "commission": 0.62,
+      "slippage_pct": 0.2873833344524374,
+      "reference_price": 14.893
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "TER US Equity",
+      "side": "BUY",
+      "shares": 14,
+      "price": 66.1518,
+      "commission": 0.07,
+      "slippage_pct": 2.7428408127257735,
+      "reference_price": 64.3858
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "NEE US Equity",
+      "side": "BUY",
+      "shares": 62,
+      "price": 57.903,
+      "commission": 0.31,
+      "slippage_pct": 0.5183430204090114,
+      "reference_price": 58.2047
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CHTR US Equity",
+      "side": "BUY",
+      "shares": 3,
+      "price": 532.05,
+      "commission": 0.015,
+      "slippage_pct": 2.8195416070807244,
+      "reference_price": 517.46
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "SPGI US Equity",
+      "side": "BUY",
+      "shares": 8,
+      "price": 281.841,
+      "commission": 0.04,
+      "slippage_pct": 0.6603760107431603,
+      "reference_price": 279.992
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "TDG US Equity",
+      "side": "BUY",
+      "shares": 4,
+      "price": 542.137,
+      "commission": 0.02,
+      "slippage_pct": 1.3990277879088657,
+      "reference_price": 534.657
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "MSCI US Equity",
+      "side": "BUY",
+      "shares": 5,
+      "price": 276.6085,
+      "commission": 0.025,
+      "slippage_pct": 2.3967734531750824,
+      "reference_price": 270.134
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "OKE US Equity",
+      "side": "BUY",
+      "shares": 52,
+      "price": 51.2935,
+      "commission": 0.26,
+      "slippage_pct": 0.5743383381986268,
+      "reference_price": 51.5898
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "EL US Equity",
+      "side": "BUY",
+      "shares": 8,
+      "price": 182.0364,
+      "commission": 0.04,
+      "slippage_pct": 0.5328834189809,
+      "reference_price": 181.0715
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "LDOS US Equity",
+      "side": "BUY",
+      "shares": 28,
+      "price": 94.8227,
+      "commission": 0.14,
+      "slippage_pct": 1.9807272453512041,
+      "reference_price": 92.981
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "ETR US Equity",
+      "side": "BUY",
+      "shares": 71,
+      "price": 53.4507,
+      "commission": 0.355,
+      "slippage_pct": 0.5094039466113026,
+      "reference_price": 53.1798
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "TGT US Equity",
+      "side": "BUY",
+      "shares": 13,
+      "price": 97.1959,
+      "commission": 0.065,
+      "slippage_pct": 1.5982539415409054,
+      "reference_price": 95.6669
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "GNRC US Equity",
+      "side": "BUY",
+      "shares": 12,
+      "price": 103.74,
+      "commission": 0.06,
+      "slippage_pct": 0.14480162177815567,
+      "reference_price": 103.59
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "EQIX US Equity",
+      "side": "BUY",
+      "shares": 4,
+      "price": 543.23,
+      "commission": 0.02,
+      "slippage_pct": 2.35196807518461,
+      "reference_price": 530.747
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "EIX US Equity",
+      "side": "BUY",
+      "shares": 42,
+      "price": 60.3895,
+      "commission": 0.21,
+      "slippage_pct": 1.4501153271747094,
+      "reference_price": 59.5263
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "TTD US Equity",
+      "side": "BUY",
+      "shares": 48,
+      "price": 27.402,
+      "commission": 0.24,
+      "slippage_pct": 1.798053347202622,
+      "reference_price": 26.918
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "RMD US Equity",
+      "side": "BUY",
+      "shares": 12,
+      "price": 155.3655,
+      "commission": 0.06,
+      "slippage_pct": 2.623152009786362,
+      "reference_price": 151.3942
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "AAPL US Equity",
+      "side": "BUY",
+      "shares": 18,
+      "price": 74.5456,
+      "commission": 0.09,
+      "slippage_pct": 0.2745121122449592,
+      "reference_price": 74.7508
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "AMT US Equity",
+      "side": "BUY",
+      "shares": 10,
+      "price": 202.054,
+      "commission": 0.05,
+      "slippage_pct": 1.0052838639692445,
+      "reference_price": 200.043
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CMG US Equity",
+      "side": "BUY",
+      "shares": 172,
+      "price": 17.347,
+      "commission": 0.86,
+      "slippage_pct": 0.06922411306605396,
+      "reference_price": 17.335
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "DXCM US Equity",
+      "side": "BUY",
+      "shares": 31,
+      "price": 59.2725,
+      "commission": 0.155,
+      "slippage_pct": 1.5202492211837992,
+      "reference_price": 60.1875
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "GPN US Equity",
+      "side": "BUY",
+      "shares": 11,
+      "price": 189.3832,
+      "commission": 0.055,
+      "slippage_pct": 1.3354023142264728,
+      "reference_price": 186.8875
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "CAG US Equity",
+      "side": "BUY",
+      "shares": 57,
+      "price": 26.3177,
+      "commission": 0.28500000000000003,
+      "slippage_pct": 0.060832569757841654,
+      "reference_price": 26.3017
+    },
+    {
+      "date": "2020-02-03",
+      "ticker": "LRCX US Equity",
+      "side": "BUY",
+      "shares": 39,
+      "price": 28.8359,
+      "commission": 0.195,
+      "slippage_pct": 3.4304775910615275,
+      "reference_price": 27.8795
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "APD US Equity",
+      "side": "SELL",
+      "shares": 7,
+      "price": 202.179,
+      "commission": 0.035,
+      "slippage_pct": 5.027124435784205,
+      "reference_price": 192.5017
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "BBY US Equity",
+      "side": "SELL",
+      "shares": 30,
+      "price": 63.4486,
+      "commission": 0.15,
+      "slippage_pct": 5.234647758842314,
+      "reference_price": 60.2925
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "NVDA US Equity",
+      "side": "BUY",
+      "shares": 137,
+      "price": 6.8845,
+      "commission": 0.685,
+      "slippage_pct": 2.35500512927254,
+      "reference_price": 6.7261
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "PODD US Equity",
+      "side": "SELL",
+      "shares": 3,
+      "price": 181.51,
+      "commission": 0.015,
+      "slippage_pct": 4.453334737063751,
+      "reference_price": 189.97
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "DHR US Equity",
+      "side": "SELL",
+      "shares": 12,
+      "price": 130.5402,
+      "commission": 0.06,
+      "slippage_pct": 4.22604257819735,
+      "reference_price": 125.2472
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "BX US Equity",
+      "side": "BUY",
+      "shares": 7,
+      "price": 46.4488,
+      "commission": 0.035,
+      "slippage_pct": 4.067590789836289,
+      "reference_price": 44.6333
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "SHW US Equity",
+      "side": "BUY",
+      "shares": 13,
+      "price": 170.96,
+      "commission": 0.065,
+      "slippage_pct": 4.174029614283099,
+      "reference_price": 164.11
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "APO US Equity",
+      "side": "BUY",
+      "shares": 39,
+      "price": 37.6783,
+      "commission": 0.195,
+      "slippage_pct": 4.152465301677079,
+      "reference_price": 36.1761
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "MLM US Equity",
+      "side": "BUY",
+      "shares": 2,
+      "price": 228.166,
+      "commission": 0.01,
+      "slippage_pct": 4.118353023852226,
+      "reference_price": 219.141
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "ACGL US Equity",
+      "side": "SELL",
+      "shares": 65,
+      "price": 40.4037,
+      "commission": 0.325,
+      "slippage_pct": 5.095357499583819,
+      "reference_price": 38.4448
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "ZTS US Equity",
+      "side": "BUY",
+      "shares": 3,
+      "price": 132.7004,
+      "commission": 0.015,
+      "slippage_pct": 4.263229683267022,
+      "reference_price": 127.2744
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "QCOM US Equity",
+      "side": "BUY",
+      "shares": 6,
+      "price": 70.8891,
+      "commission": 0.03,
+      "slippage_pct": 2.8863402824947233,
+      "reference_price": 68.9004
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "INVH US Equity",
+      "side": "SELL",
+      "shares": 96,
+      "price": 25.7208,
+      "commission": 0.48,
+      "slippage_pct": 4.043072168534831,
+      "reference_price": 24.7213
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "DAY US Equity",
+      "side": "SELL",
+      "shares": 27,
+      "price": 74.21,
+      "commission": 0.135,
+      "slippage_pct": 4.920118761487331,
+      "reference_price": 70.73
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "NEE US Equity",
+      "side": "SELL",
+      "shares": 15,
+      "price": 58.5414,
+      "commission": 0.075,
+      "slippage_pct": 6.167891418995879,
+      "reference_price": 55.1404
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CHTR US Equity",
+      "side": "BUY",
+      "shares": 1,
+      "price": 497.13,
+      "commission": 0.005,
+      "slippage_pct": 0.8029685503984385,
+      "reference_price": 493.17
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "MSCI US Equity",
+      "side": "BUY",
+      "shares": 1,
+      "price": 298.8461,
+      "commission": 0.005,
+      "slippage_pct": 6.800017439882431,
+      "reference_price": 279.8184
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "COST US Equity",
+      "side": "BUY",
+      "shares": 8,
+      "price": 283.631,
+      "commission": 0.04,
+      "slippage_pct": 9.959215637623949,
+      "reference_price": 257.942
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "EIX US Equity",
+      "side": "SELL",
+      "shares": 41,
+      "price": 54.7751,
+      "commission": 0.20500000000000002,
+      "slippage_pct": 4.836940814846148,
+      "reference_price": 52.2479
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "ETR US Equity",
+      "side": "SELL",
+      "shares": 13,
+      "price": 50.5413,
+      "commission": 0.065,
+      "slippage_pct": 6.166934492863221,
+      "reference_price": 47.6055
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "DVA US Equity",
+      "side": "BUY",
+      "shares": 21,
+      "price": 82.23,
+      "commission": 0.105,
+      "slippage_pct": 5.939190930172635,
+      "reference_price": 77.62
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TTD US Equity",
+      "side": "SELL",
+      "shares": 48,
+      "price": 28.811,
+      "commission": 0.24,
+      "slippage_pct": 0.2993907745865919,
+      "reference_price": 28.725
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CMG US Equity",
+      "side": "SELL",
+      "shares": 172,
+      "price": 15.376,
+      "commission": 0.86,
+      "slippage_pct": 0.6204756980351609,
+      "reference_price": 15.472
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "DXCM US Equity",
+      "side": "SELL",
+      "shares": 15,
+      "price": 71.4325,
+      "commission": 0.075,
+      "slippage_pct": 3.5253623188405867,
+      "reference_price": 69.0
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "GPN US Equity",
+      "side": "BUY",
+      "shares": 1,
+      "price": 183.9616,
+      "commission": 0.005,
+      "slippage_pct": 4.576816051344286,
+      "reference_price": 175.9105
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CAG US Equity",
+      "side": "BUY",
+      "shares": 25,
+      "price": 22.5626,
+      "commission": 0.125,
+      "slippage_pct": 5.8074863300850605,
+      "reference_price": 21.3242
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "NEM US Equity",
+      "side": "BUY",
+      "shares": 42,
+      "price": 39.4078,
+      "commission": 0.21,
+      "slippage_pct": 4.929373077895975,
+      "reference_price": 37.5565
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "VMC US Equity",
+      "side": "SELL",
+      "shares": 16,
+      "price": 120.066,
+      "commission": 0.08,
+      "slippage_pct": 4.639974900210906,
+      "reference_price": 114.742
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CSGP US Equity",
+      "side": "SELL",
+      "shares": 9,
+      "price": 70.58,
+      "commission": 0.045,
+      "slippage_pct": 5.72357285160053,
+      "reference_price": 66.759
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "WST US Equity",
+      "side": "SELL",
+      "shares": 6,
+      "price": 154.3614,
+      "commission": 0.03,
+      "slippage_pct": 3.938601635826306,
+      "reference_price": 148.5121
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "HLT US Equity",
+      "side": "SELL",
+      "shares": 12,
+      "price": 95.3197,
+      "commission": 0.06,
+      "slippage_pct": 0.7612630386597119,
+      "reference_price": 96.0509
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "FICO US Equity",
+      "side": "BUY",
+      "shares": 4,
+      "price": 387.06,
+      "commission": 0.02,
+      "slippage_pct": 2.933276600271263,
+      "reference_price": 376.03
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "PLD US Equity",
+      "side": "BUY",
+      "shares": 25,
+      "price": 75.3508,
+      "commission": 0.125,
+      "slippage_pct": 4.734185097463619,
+      "reference_price": 71.9448
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "PSX US Equity",
+      "side": "SELL",
+      "shares": 19,
+      "price": 59.7264,
+      "commission": 0.095,
+      "slippage_pct": 0.33396273325314396,
+      "reference_price": 59.5276
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "VLO US Equity",
+      "side": "BUY",
+      "shares": 24,
+      "price": 54.0938,
+      "commission": 0.12,
+      "slippage_pct": 2.4453341312738455,
+      "reference_price": 52.8026
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "SBAC US Equity",
+      "side": "BUY",
+      "shares": 6,
+      "price": 265.528,
+      "commission": 0.03,
+      "slippage_pct": 7.5295118148500695,
+      "reference_price": 246.935
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "SO US Equity",
+      "side": "BUY",
+      "shares": 48,
+      "price": 51.5863,
+      "commission": 0.24,
+      "slippage_pct": 5.914514963371778,
+      "reference_price": 48.7056
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "BLDR US Equity",
+      "side": "SELL",
+      "shares": 5,
+      "price": 24.17,
+      "commission": 0.025,
+      "slippage_pct": 6.42888595332453,
+      "reference_price": 22.71
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TSN US Equity",
+      "side": "SELL",
+      "shares": 23,
+      "price": 59.9457,
+      "commission": 0.115,
+      "slippage_pct": 3.9953020937603627,
+      "reference_price": 57.6427
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "DHI US Equity",
+      "side": "BUY",
+      "shares": 39,
+      "price": 51.8565,
+      "commission": 0.195,
+      "slippage_pct": 2.9284791320554597,
+      "reference_price": 50.3811
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CDW US Equity",
+      "side": "SELL",
+      "shares": 12,
+      "price": 112.3893,
+      "commission": 0.06,
+      "slippage_pct": 5.042913741650211,
+      "reference_price": 106.9937
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "KMX US Equity",
+      "side": "BUY",
+      "shares": 5,
+      "price": 89.74,
+      "commission": 0.025,
+      "slippage_pct": 2.7831863474974146,
+      "reference_price": 87.31
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "BRO US Equity",
+      "side": "BUY",
+      "shares": 23,
+      "price": 43.7551,
+      "commission": 0.115,
+      "slippage_pct": 5.649858023141262,
+      "reference_price": 41.4152
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "HWM US Equity",
+      "side": "BUY",
+      "shares": 32,
+      "price": 25.2403,
+      "commission": 0.16,
+      "slippage_pct": 2.044504459340361,
+      "reference_price": 24.7346
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "KLAC US Equity",
+      "side": "SELL",
+      "shares": 7,
+      "price": 148.72,
+      "commission": 0.035,
+      "slippage_pct": 3.2706062079022344,
+      "reference_price": 144.01
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "CPRT US Equity",
+      "side": "SELL",
+      "shares": 39,
+      "price": 21.6725,
+      "commission": 0.195,
+      "slippage_pct": 2.6160037878787805,
+      "reference_price": 21.12
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "AXON US Equity",
+      "side": "BUY",
+      "shares": 20,
+      "price": 82.34,
+      "commission": 0.1,
+      "slippage_pct": 6.423678428331393,
+      "reference_price": 77.37
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "MA US Equity",
+      "side": "BUY",
+      "shares": 5,
+      "price": 297.365,
+      "commission": 0.025,
+      "slippage_pct": 5.681305285753375,
+      "reference_price": 281.379
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "KMI US Equity",
+      "side": "BUY",
+      "shares": 41,
+      "price": 14.4435,
+      "commission": 0.20500000000000002,
+      "slippage_pct": 5.58191214848062,
+      "reference_price": 13.6799
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TER US Equity",
+      "side": "BUY",
+      "shares": 11,
+      "price": 59.1065,
+      "commission": 0.055,
+      "slippage_pct": 2.944301240072454,
+      "reference_price": 57.416
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "OKE US Equity",
+      "side": "SELL",
+      "shares": 10,
+      "price": 47.6346,
+      "commission": 0.05,
+      "slippage_pct": 3.6120415887240664,
+      "reference_price": 45.974
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "EL US Equity",
+      "side": "SELL",
+      "shares": 8,
+      "price": 179.8296,
+      "commission": 0.04,
+      "slippage_pct": 5.299536067352504,
+      "reference_price": 170.7791
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "LDOS US Equity",
+      "side": "SELL",
+      "shares": 15,
+      "price": 101.8562,
+      "commission": 0.075,
+      "slippage_pct": 7.218745559140401,
+      "reference_price": 94.9985
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TGT US Equity",
+      "side": "BUY",
+      "shares": 10,
+      "price": 94.7517,
+      "commission": 0.05,
+      "slippage_pct": 5.883437557271013,
+      "reference_price": 89.4868
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "BF/B US Equity",
+      "side": "BUY",
+      "shares": 42,
+      "price": 58.2756,
+      "commission": 0.21,
+      "slippage_pct": 4.738762378906871,
+      "reference_price": 55.639
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "RMD US Equity",
+      "side": "BUY",
+      "shares": 2,
+      "price": 161.0685,
+      "commission": 0.01,
+      "slippage_pct": 6.158810630611754,
+      "reference_price": 151.7241
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "AAPL US Equity",
+      "side": "BUY",
+      "shares": 4,
+      "price": 72.3379,
+      "commission": 0.02,
+      "slippage_pct": 9.310060323255287,
+      "reference_price": 66.1768
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "AMT US Equity",
+      "side": "SELL",
+      "shares": 10,
+      "price": 207.821,
+      "commission": 0.05,
+      "slippage_pct": 6.150812906389349,
+      "reference_price": 195.779
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TTWO US Equity",
+      "side": "BUY",
+      "shares": 10,
+      "price": 112.06,
+      "commission": 0.05,
+      "slippage_pct": 4.261257908448082,
+      "reference_price": 107.48
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "PHM US Equity",
+      "side": "BUY",
+      "shares": 57,
+      "price": 39.1529,
+      "commission": 0.28500000000000003,
+      "slippage_pct": 3.358165614242576,
+      "reference_price": 37.8808
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "LRCX US Equity",
+      "side": "BUY",
+      "shares": 6,
+      "price": 28.0777,
+      "commission": 0.03,
+      "slippage_pct": 2.3515816947719115,
+      "reference_price": 27.4326
+    },
+    {
+      "date": "2020-03-02",
+      "ticker": "TSLA US Equity",
+      "side": "BUY",
+      "shares": 10,
+      "price": 49.5747,
+      "commission": 0.05,
+      "slippage_pct": 11.322017304138312,
+      "reference_price": 44.5327
+    }
+  ],
+  "cumulative_costs": 15.485000000000003,
+  "last_updated": "2025-10-03T14:20:40.035414"
+}

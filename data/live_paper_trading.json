@@ -1,0 +1,137 @@
+{
+  "capital": 100000.0,
+  "cash": 1700.594970703125,
+  "positions": {
+    "META": {
+      "shares": 14,
+      "entry_price": 714.2100219726562
+    },
+    "TSLA": {
+      "shares": 19,
+      "entry_price": 418.1300048828125
+    },
+    "MSFT": {
+      "shares": 19,
+      "entry_price": 517.8099975585938
+    },
+    "AAPL": {
+      "shares": 39,
+      "entry_price": 257.5491943359375
+    },
+    "UNH": {
+      "shares": 28,
+      "entry_price": 358.989990234375
+    },
+    "V": {
+      "shares": 29,
+      "entry_price": 350.5950012207031
+    },
+    "NVDA": {
+      "shares": 54,
+      "entry_price": 186.125
+    },
+    "GOOGL": {
+      "shares": 41,
+      "entry_price": 245.07650756835938
+    },
+    "BRK-B": {
+      "shares": 20,
+      "entry_price": 501.3949890136719
+    },
+    "AMZN": {
+      "shares": 46,
+      "entry_price": 220.16140747070312
+    }
+  },
+  "nav_history": [
+    {
+      "date": "2025-10-03T13:55:05.335522",
+      "nav": 100000.0,
+      "cash": 100000.0,
+      "num_positions": 0
+    },
+    {
+      "date": "2025-10-03T13:55:39.691762",
+      "nav": 1700.594970703125,
+      "cash": 1700.594970703125,
+      "num_positions": 10,
+      "return": -98.29940502929688
+    }
+  ],
+  "trade_history": [
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "META",
+      "shares": 14,
+      "price": 714.2100219726562,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "TSLA",
+      "shares": 19,
+      "price": 418.1300048828125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "MSFT",
+      "shares": 19,
+      "price": 517.8099975585938,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "AAPL",
+      "shares": 39,
+      "price": 257.5491943359375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "UNH",
+      "shares": 28,
+      "price": 358.989990234375,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "V",
+      "shares": 29,
+      "price": 350.5950012207031,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "NVDA",
+      "shares": 54,
+      "price": 186.125,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "GOOGL",
+      "shares": 41,
+      "price": 245.07650756835938,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "BRK-B",
+      "shares": 20,
+      "price": 501.3949890136719,
+      "side": "BUY"
+    },
+    {
+      "date": "2025-10-03T13:55:39.122381",
+      "ticker": "AMZN",
+      "shares": 46,
+      "price": 220.16140747070312,
+      "side": "BUY"
+    }
+  ],
+  "last_rebalance": "2025-10-03T13:55:39.691762",
+  "initialized": true,
+  "start_date": "2025-10-03T13:53:45.531510",
+  "last_updated": "2025-10-03T13:55:39.691762"
+}

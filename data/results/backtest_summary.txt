@@ -1,0 +1,14 @@
+=== Cross-Sectional Momentum Backtest (Strategy Core) ===
+
+Period: 2010-01-01 to 2025-09-30
+CAGR:   11.9219%
+Vol:    12.1600%
+Sharpe: 0.99
+MaxDD:  -20.56%
+
+Strategy Parameters:
+  Transaction costs: 10.0 bps
+  Top % per sector: 10%
+  Vol window: 20 days
+  Position cap: 5.00%
+  Trend MA: 200 days
