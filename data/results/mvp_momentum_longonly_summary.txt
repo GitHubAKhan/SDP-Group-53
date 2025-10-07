@@ -1,8 +1,0 @@
-CAGR:   18.7671%
-Vol:    20.6898%
-Sharpe: 0.93
-MaxDD:  -51.67%
-Costs:  10.0 bps per $ traded (one-way)
-Top% per sector: 10%
-Vol window: 20 days
-Name cap: 2.00%
