@@ -1,8 +1,8 @@
 === MVP Cross-Sectional Momentum with Risk Management ===
 
-CAGR:   14.3863%
-Vol:    13.3780%
-Sharpe: 1.07
+CAGR:   9.3571%
+Vol:    13.6255%
+Sharpe: 0.73
 MaxDD:  -25.45%
 
 Strategy Parameters:

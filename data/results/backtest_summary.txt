@@ -1,10 +1,10 @@
 === Cross-Sectional Momentum Backtest (Strategy Core) ===
 
-Period: 2010-01-01 to 2025-09-30
-CAGR:   11.9219%
-Vol:    12.1600%
-Sharpe: 0.99
-MaxDD:  -20.56%
+Period: 2017-10-01 to 2025-09-30
+CAGR:   10.9655%
+Vol:    18.2044%
+Sharpe: 0.66
+MaxDD:  -38.06%
 
 Strategy Parameters:
   Transaction costs: 10.0 bps
