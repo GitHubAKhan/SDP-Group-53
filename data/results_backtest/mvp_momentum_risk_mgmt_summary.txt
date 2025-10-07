@@ -1,0 +1,20 @@
+=== MVP Cross-Sectional Momentum with Risk Management ===
+
+CAGR:   16.2109%
+Vol:    11.2832%
+Sharpe: 1.38
+MaxDD:  -17.72%
+
+Strategy Parameters:
+  Costs:  10.0 bps per $ traded (one-way)
+  Top% per sector: 20%
+  Vol window: 20 days
+  Name cap: 5.00%
+
+Risk Management:
+  Trend filter: ENABLED
+    - 200-day MA on SPY US Equity
+  Vol targeting: ENABLED
+    - Target: 10.0%, Range: 25.0%-100%x
+  Drawdown control: ENABLED
+    - Thresholds: 10%/15%/25%

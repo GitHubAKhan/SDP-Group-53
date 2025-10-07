@@ -13,7 +13,7 @@ import pandas as pd
 
 # ------------------ Config (edit as needed) ------------------
 REBAL_FREQ = "M"               # Monthly rebalances at month-end (signals computed as-of M; trade next day)
-TOP_PCT_PER_SECTOR = 0.10      # Top 10% by 12-1 momentum within each sector
+TOP_PCT_PER_SECTOR = 0.20      # Top 10% by 12-1 momentum within each sector
 MAX_NAME_WEIGHT = 0.05         # 2% cap per name after normalization
 COST_PER_TURNOVER = 0.0010     # 10 bps per $ traded (one-way)
 VOL_WINDOW = 20                # 20-day vol for inverse-vol sizing
