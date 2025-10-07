@@ -10,11 +10,12 @@ import pandas as pd
 ### Explain these config options
 ### Explain risk management techniques
 ### Show Results
+## python cross_sectional_risk.py --data-dir data --start 1995-01-01 --end 2000-12-31 --out-dir results_backtest
 
 # ------------------ Config (edit as needed) ------------------
 REBAL_FREQ = "M"               # Monthly rebalances at month-end (signals computed as-of M; trade next day)
 TOP_PCT_PER_SECTOR = 0.20      # Top 10% by 12-1 momentum within each sector
-MAX_NAME_WEIGHT = 0.05         # 2% cap per name after normalization
+MAX_NAME_WEIGHT = 0.05         # 5% cap per name after normalization
 COST_PER_TURNOVER = 0.0010     # 10 bps per $ traded (one-way)
 VOL_WINDOW = 20                # 20-day vol for inverse-vol sizing
 USE_TRI_FIRST = True           # Prefer total return index if available
@@ -25,7 +26,7 @@ TREND_MA_WINDOW = 200          # 200-day moving average for SPY
 TREND_TICKER = "SPY US Equity" # Benchmark ticker for trend
 
 USE_VOL_TARGETING = True       # Scale exposure to target volatility
-TARGET_VOL = 0.10              # Target 12% annualized volatility
+TARGET_VOL = 0.10              # Target 10% annualized volatility
 VOL_LOOKBACK = 60              # 60-day rolling vol for scaling
 MAX_LEVERAGE = 1.0             # Maximum leverage (1.0 = no leverage)
 MIN_LEVERAGE = 0.25            # Minimum 25% exposure
@@ -272,7 +273,7 @@ def backtest(prices: pd.DataFrame, const_df: pd.DataFrame, sectors_df: pd.DataFr
         
         if not is_uptrend:
             # Market is in downtrend - go to cash
-            print(f"\n[{M.date()}] ⚠️  MARKET DOWNTREND - Moving to cash (SPY < {TREND_MA_WINDOW}MA)")
+            print(f"\n[{M.date()}] MARKET DOWNTREND - Moving to cash (SPY < {TREND_MA_WINDOW}MA)")
             
             # Calculate returns for holding period as 0%
             if M != mes[-1]:
@@ -442,17 +443,11 @@ def backtest(prices: pd.DataFrame, const_df: pd.DataFrame, sectors_df: pd.DataFr
         if USE_DD_CONTROL:
             f.write(f"    - Thresholds: {DD_THRESHOLD_1:.0%}/{DD_THRESHOLD_2:.0%}/{DD_THRESHOLD_3:.0%}\n")
 
-    print("\n" + "="*60)
-    print("=== MVP Cross-Sectional Momentum with Risk Management ===")
-    print("="*60)
+    print("MVP Cross-Sectional Momentum with Risk Management")
     print(f"CAGR:   {cagr:.2%}")
     print(f"Vol:    {vol:.2%}")
     print(f"Sharpe: {sharpe:.2f}")
     print(f"MaxDD:  {mdd:.2%}")
-    print(f"\nRisk Management Active:")
-    print(f"  Trend Filter: {'✓' if USE_TREND_FILTER else '✗'}")
-    print(f"  Vol Targeting: {'✓' if USE_VOL_TARGETING else '✗'}")
-    print(f"  DD Control: {'✓' if USE_DD_CONTROL else '✗'}")
     print(f"\nOutputs written to: {args.out_dir}")
 
 def main():
