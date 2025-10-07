@@ -1,13 +1,13 @@
 === MVP Cross-Sectional Momentum with Risk Management ===
 
-CAGR:   16.2109%
-Vol:    11.2832%
-Sharpe: 1.38
-MaxDD:  -17.72%
+CAGR:   13.4085%
+Vol:    13.0456%
+Sharpe: 1.03
+MaxDD:  -26.72%
 
 Strategy Parameters:
   Costs:  10.0 bps per $ traded (one-way)
-  Top% per sector: 20%
+  Top% per sector: 10%
   Vol window: 20 days
   Name cap: 5.00%
 

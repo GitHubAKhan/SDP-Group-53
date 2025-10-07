@@ -12,15 +12,15 @@ import pandas as pd
 ### Show Results
 ## python cross_sectional_risk.py --data-dir data --start 1995-01-01 --end 2000-12-31 --out-dir results_backtest
 
-# ------------------ Config (edit as needed) ------------------
+# Config Options
 REBAL_FREQ = "M"               # Monthly rebalances at month-end (signals computed as-of M; trade next day)
-TOP_PCT_PER_SECTOR = 0.20      # Top 10% by 12-1 momentum within each sector
+TOP_PCT_PER_SECTOR = 0.10      # Top 10% by 12-1 momentum within each sector
 MAX_NAME_WEIGHT = 0.05         # 5% cap per name after normalization
 COST_PER_TURNOVER = 0.0010     # 10 bps per $ traded (one-way)
 VOL_WINDOW = 20                # 20-day vol for inverse-vol sizing
 USE_TRI_FIRST = True           # Prefer total return index if available
 
-# ------------------ Risk Management Config ------------------
+# Risk Management Config 
 USE_TREND_FILTER = True        # Only trade when market is in uptrend
 TREND_MA_WINDOW = 200          # 200-day moving average for SPY
 TREND_TICKER = "SPY US Equity" # Benchmark ticker for trend
@@ -35,7 +35,6 @@ USE_DD_CONTROL = True         # Drawdown-based deleveraging (set True to enable)
 DD_THRESHOLD_1 = 0.10          # Reduce to 75% at -10% DD
 DD_THRESHOLD_2 = 0.15          # Reduce to 50% at -15% DD
 DD_THRESHOLD_3 = 0.25          # Exit at -25% DD
-# --------------------------------------------------------------
 
 def to_datetime(s):
     return pd.to_datetime(s).dt.tz_localize(None)
