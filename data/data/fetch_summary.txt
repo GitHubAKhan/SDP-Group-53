@@ -1,0 +1,34 @@
+================================================================================
+BLOOMBERG MARKET DATA FETCH SUMMARY
+================================================================================
+
+INDICES:
+  Tickers: 12
+  Records: 85,091
+  Date Range: 1995-01-02 to 2025-09-19
+
+MOMENTUM_ETFS:
+  Tickers: 3
+  Records: 10,035
+  Date Range: 2007-03-01 to 2025-09-19
+
+SECTOR_ETFS:
+  Tickers: 11
+  Records: 64,866
+  Date Range: 1998-12-22 to 2025-09-19
+
+NASDAQ_STOCKS:
+  Tickers: 101
+  Records: 583,954
+  Date Range: 1995-01-03 to 2025-09-19
+
+RUSSELL2000_STOCKS:
+  Tickers: 1970
+  Records: 8,013,008
+  Date Range: 1995-01-03 to 2025-09-19
+
+TOTAL:
+  Tickers: 2097
+  Records: 8,756,954
+
+================================================================================

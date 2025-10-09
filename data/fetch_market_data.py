@@ -53,6 +53,7 @@ SECTOR_ETFS = {
 BATCH_SIZE = 100
 MAX_RETRIES = 3
 RETRY_DELAY = 2
+MAX_FILE_SIZE_MB = 90  # Stay under 100MB GitHub limit
 
 class BloombergDataFetcher:
     def __init__(self):
@@ -375,58 +376,94 @@ def fetch_batch_data_bloomberg(fetcher: BloombergDataFetcher, tickers: List[str]
         return pd.DataFrame()
 
 
-def save_data_by_year(df: pd.DataFrame, output_dir: str, data_type: str = "prices"):
+def save_data_chunked(df: pd.DataFrame, output_dir: str, category: str):
+    """
+    Save data in chunks that stay under GitHub's 100MB limit.
+    Strategy: Split by category and year ranges to keep files small.
+    """
     if df.empty:
-        print(f"  No data to save for {data_type}")
+        print(f"  No data to save for {category}")
         return
 
-    parquet_dir = os.path.join(output_dir, f"{data_type}_parquet_v2")
-    os.makedirs(parquet_dir, exist_ok=True)
+    category_dir = os.path.join(output_dir, category)
+    os.makedirs(category_dir, exist_ok=True)
+
     df['year'] = pd.to_datetime(df['date']).dt.year
+    years = sorted(df['year'].unique())
 
-    for year, year_df in df.groupby('year'):
-        year_df_clean = year_df.drop('year', axis=1)
-        output_path = os.path.join(parquet_dir, f"year={year}")
-        os.makedirs(output_path, exist_ok=True)
-        file_path = os.path.join(output_path, "data.parquet")
-        year_df_clean.to_parquet(file_path, index=False)
-        print(f"  Saved {len(year_df_clean)} rows for year {year}")
+    # Group years into chunks of 5 to keep file sizes manageable
+    year_chunks = [years[i:i+5] for i in range(0, len(years), 5)]
 
-    single_file = os.path.join(output_dir, f"{data_type}_all_v2.parquet")
-    df.drop('year', axis=1).to_parquet(single_file, index=False)
-    print(f"  Saved combined file: {single_file}")
+    for chunk_idx, year_chunk in enumerate(year_chunks):
+        chunk_df = df[df['year'].isin(year_chunk)]
+        chunk_df = chunk_df.drop('year', axis=1)
+        
+        year_range = f"{min(year_chunk)}-{max(year_chunk)}"
+        filename = f"{category}_{year_range}.parquet"
+        filepath = os.path.join(category_dir, filename)
+        
+        chunk_df.to_parquet(filepath, index=False)
+        
+        # Check file size
+        size_mb = os.path.getsize(filepath) / (1024 * 1024)
+        print(f"  Saved {filename}: {len(chunk_df)} rows, {size_mb:.2f} MB")
+        
+        # If still too large, split further by ticker groups
+        if size_mb > MAX_FILE_SIZE_MB:
+            os.remove(filepath)
+            print(f"  ⚠ File too large, splitting by tickers...")
+            save_data_by_ticker_groups(chunk_df, category_dir, category, year_range)
+
+    df_clean = df.drop('year', axis=1)
+    return df_clean
 
 
-def create_summary_report(df: pd.DataFrame, output_dir: str):
-    if df.empty:
-        return
+def save_data_by_ticker_groups(df: pd.DataFrame, output_dir: str, category: str, year_range: str):
+    """
+    Split data by ticker groups when year chunks are still too large.
+    """
+    tickers = sorted(df['ticker'].unique())
+    
+    # Split tickers into groups of 50
+    ticker_chunks = [tickers[i:i+50] for i in range(0, len(tickers), 50)]
+    
+    for group_idx, ticker_group in enumerate(ticker_chunks):
+        group_df = df[df['ticker'].isin(ticker_group)]
+        filename = f"{category}_{year_range}_group{group_idx+1}.parquet"
+        filepath = os.path.join(output_dir, filename)
+        
+        group_df.to_parquet(filepath, index=False)
+        size_mb = os.path.getsize(filepath) / (1024 * 1024)
+        print(f"    Saved {filename}: {len(group_df)} rows, {size_mb:.2f} MB")
 
+
+def create_summary_report(all_data_dict: dict, output_dir: str):
+    """
+    Create a summary report of fetched data organized by category.
+    """
     report = []
     report.append("=" * 80)
     report.append("BLOOMBERG MARKET DATA FETCH SUMMARY")
     report.append("=" * 80)
-    report.append(f"\nDate Range: {df['date'].min().date()} to {df['date'].max().date()}")
-    report.append(f"Total Tickers: {df['ticker'].nunique()}")
-    report.append(f"Total Records: {len(df):,}")
-    report.append(f"\nTickers by Type:")
-
-    index_count = df[df['ticker'].str.contains(' Index', regex=False)]['ticker'].nunique()
-    etf_count = df[df['ticker'].str.contains('SPY|IWM|QQQ|DIA|IWF|IWD|VTI|MTUM|PDP|SPMO|XL', regex=True)]['ticker'].nunique()
-    equity_count = df[df['ticker'].str.contains(' US Equity', regex=False)]['ticker'].nunique() - etf_count
-
-    report.append(f"  Indices: {index_count}")
-    report.append(f"  ETFs: {etf_count}")
-    report.append(f"  Individual Equities: {equity_count}")
-    report.append(f"\nData Coverage:")
-    report.append(f"  Average records per ticker: {len(df) / df['ticker'].nunique():.0f}")
-    report.append(f"\nSample Tickers (first 20):")
     
-    for ticker in sorted(df['ticker'].unique())[:20]:
-        ticker_data = df[df['ticker'] == ticker]
-        report.append(f"  {ticker}: {len(ticker_data)} records ({ticker_data['date'].min().date()} to {ticker_data['date'].max().date()})")
-
+    total_tickers = 0
+    total_records = 0
+    
+    for category, df in all_data_dict.items():
+        if not df.empty:
+            report.append(f"\n{category.upper()}:")
+            report.append(f"  Tickers: {df['ticker'].nunique()}")
+            report.append(f"  Records: {len(df):,}")
+            report.append(f"  Date Range: {df['date'].min().date()} to {df['date'].max().date()}")
+            total_tickers += df['ticker'].nunique()
+            total_records += len(df)
+    
+    report.append(f"\nTOTAL:")
+    report.append(f"  Tickers: {total_tickers}")
+    report.append(f"  Records: {total_records:,}")
     report.append("\n" + "=" * 80)
-    report_path = os.path.join(output_dir, "fetch_summary_v2.txt")
+    
+    report_path = os.path.join(output_dir, "fetch_summary.txt")
     with open(report_path, 'w') as f:
         f.write('\n'.join(report))
     print('\n'.join(report))
@@ -441,13 +478,14 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
     print("=" * 80)
     print(f"\nDate Range: {start_date} to {end_date}")
     print(f"Output Directory: {output_dir}")
+    print(f"Files will be saved in chunks under {MAX_FILE_SIZE_MB}MB each")
 
     os.makedirs(output_dir, exist_ok=True)
     fetcher = BloombergDataFetcher()
 
     try:
         fetcher.start_session()
-        all_data = []
+        all_data_dict = {}
 
         print("\n" + "=" * 80)
         print("1. FETCHING INDICES AND INDEX ETFs")
@@ -455,7 +493,8 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
         index_tickers = list(INDEX_TICKERS.keys())
         index_data = fetch_batch_data_bloomberg(fetcher, index_tickers, start_date, end_date, "Indices")
         if not index_data.empty:
-            all_data.append(index_data)
+            all_data_dict['indices'] = index_data
+            save_data_chunked(index_data, output_dir, 'indices')
 
         print("\n" + "=" * 80)
         print("2. FETCHING MOMENTUM ETFs")
@@ -463,7 +502,8 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
         momentum_tickers = list(MOMENTUM_ETFS.keys())
         momentum_data = fetch_batch_data_bloomberg(fetcher, momentum_tickers, start_date, end_date, "Momentum ETFs")
         if not momentum_data.empty:
-            all_data.append(momentum_data)
+            all_data_dict['momentum_etfs'] = momentum_data
+            save_data_chunked(momentum_data, output_dir, 'momentum_etfs')
 
         print("\n" + "=" * 80)
         print("3. FETCHING SECTOR ETFs")
@@ -471,7 +511,8 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
         sector_tickers = list(SECTOR_ETFS.keys())
         sector_data = fetch_batch_data_bloomberg(fetcher, sector_tickers, start_date, end_date, "Sector ETFs")
         if not sector_data.empty:
-            all_data.append(sector_data)
+            all_data_dict['sector_etfs'] = sector_data
+            save_data_chunked(sector_data, output_dir, 'sector_etfs')
 
         if include_nasdaq:
             print("\n" + "=" * 80)
@@ -483,7 +524,8 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
                 print(f"  Limited to {nasdaq_limit} NASDAQ tickers")
             nasdaq_data = fetch_batch_data_bloomberg(fetcher, nasdaq_tickers, start_date, end_date, "NASDAQ Stocks")
             if not nasdaq_data.empty:
-                all_data.append(nasdaq_data)
+                all_data_dict['nasdaq_stocks'] = nasdaq_data
+                save_data_chunked(nasdaq_data, output_dir, 'nasdaq_stocks')
 
         if include_russell:
             print("\n" + "=" * 80)
@@ -492,31 +534,22 @@ def fetch_all_data_bloomberg(start_date: str, end_date: str, output_dir: str,
             russell_tickers = get_russell_2000_tickers_bloomberg(fetcher, use_index=fetch_from_index, limit=russell_limit)
             russell_data = fetch_batch_data_bloomberg(fetcher, russell_tickers, start_date, end_date, "Russell 2000 Stocks")
             if not russell_data.empty:
-                all_data.append(russell_data)
+                all_data_dict['russell2000_stocks'] = russell_data
+                save_data_chunked(russell_data, output_dir, 'russell2000_stocks')
 
-        if all_data:
-            print("\n" + "=" * 80)
-            print("COMBINING AND SAVING DATA")
-            print("=" * 80)
-            combined_df = pd.concat(all_data, ignore_index=True)
-            combined_df = combined_df.sort_values(['ticker', 'date']).reset_index(drop=True)
-            combined_df = combined_df.drop_duplicates(subset=['date', 'ticker'], keep='first')
-            save_data_by_year(combined_df, output_dir, data_type="prices")
-            create_summary_report(combined_df, output_dir)
-
+        if all_data_dict:
             print("\n" + "=" * 80)
             print("DATA FETCH COMPLETE!")
             print("=" * 80)
-            print(f"\nTotal tickers fetched: {combined_df['ticker'].nunique()}")
-            print(f"Total records: {len(combined_df):,}")
-            print(f"Date range: {combined_df['date'].min().date()} to {combined_df['date'].max().date()}")
+            create_summary_report(all_data_dict, output_dir)
             print(f"\nData saved to: {output_dir}")
-            return combined_df
+            print(f"Files are organized by category and split into chunks under {MAX_FILE_SIZE_MB}MB")
+            return all_data_dict
         else:
             print("\n" + "=" * 80)
             print("ERROR: No data was fetched successfully.")
             print("=" * 80)
-            return pd.DataFrame()
+            return {}
 
     except Exception as e:
         print(f"\n✗ ERROR: {str(e)}")
