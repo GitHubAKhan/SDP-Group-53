@@ -1,0 +1,39 @@
+================================================================================
+BLOOMBERG MARKET DATA FETCH SUMMARY
+================================================================================
+
+Date Range: 1995-01-02 to 2025-09-19
+Total Tickers: 2097
+Total Records: 8,756,954
+
+Tickers by Type:
+  Indices: 5
+  ETFs: 24
+  Individual Equities: 2068
+
+Data Coverage:
+  Average records per ticker: 4176
+
+Sample Tickers (first 20):
+  AAMI US Equity: 2754 records (2014-10-08 to 2025-09-19)
+  AAOI US Equity: 3015 records (2013-09-25 to 2025-09-19)
+  AAP US Equity: 5990 records (2001-11-29 to 2025-09-19)
+  AAPL US Equity: 7731 records (1995-01-03 to 2025-09-19)
+  AARD US Equity: 152 records (2025-02-12 to 2025-09-19)
+  AAT US Equity: 3694 records (2011-01-12 to 2025-09-19)
+  ABAT US Equity: 2343 records (2016-02-24 to 2025-09-19)
+  ABCB US Equity: 7569 records (1995-01-03 to 2025-09-19)
+  ABEO US Equity: 7570 records (1995-01-03 to 2025-09-19)
+  ABG US Equity: 5920 records (2002-03-13 to 2025-09-19)
+  ABL US Equity: 1245 records (2020-09-14 to 2025-09-19)
+  ABM US Equity: 7731 records (1995-01-03 to 2025-09-19)
+  ABNB US Equity: 1200 records (2020-12-09 to 2025-09-19)
+  ABR US Equity: 5399 records (2004-04-06 to 2025-09-19)
+  ABSI US Equity: 1047 records (2021-07-21 to 2025-09-19)
+  ABUS US Equity: 4427 records (2007-07-23 to 2025-09-19)
+  ACA US Equity: 1731 records (2018-10-30 to 2025-09-19)
+  ACAD US Equity: 5362 records (2004-05-26 to 2025-09-19)
+  ACCO US Equity: 5058 records (2005-08-09 to 2025-09-19)
+  ACDC US Equity: 842 records (2022-05-12 to 2025-09-19)
+
+================================================================================
