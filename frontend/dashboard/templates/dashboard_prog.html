@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UConn Quant - Algorithmic Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <!-- ===== LOGIN PAGE ===== -->
+    <div id="login-page">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="login-logo-img">
+                    <img src="{{ url_for('static', filename='assets/husky_logo.jpg') }}" alt="UConn Husky">
+                </div>
+                <h1>UConn Quant</h1>
+                <p>Momentum-Based Algorithmic Trading</p>
+            </div>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Alpaca API Key</label>
+                    <input type="text" id="api-key" placeholder="Enter your API key" required>
+                </div>
+                <div class="form-group">
+                    <label>Alpaca API Secret</label>
+                    <input type="password" id="api-secret" placeholder="Enter your API secret" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-lock"></i> Connect Securely
+                </button>
+            </form>
+            <div class="login-info">
+                Get your credentials from <a href="https://app.alpaca.markets" target="_blank">Alpaca Markets</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN DASHBOARD ===== -->
+    <div id="main-dashboard">
+        <div class="dashboard-wrapper">
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-brand">
+                        <div class="sidebar-logo">
+                            <img src="{{ url_for('static', filename='assets/husky_logo.jpg') }}" alt="UConn Husky">
+                        </div>
+                        <div class="sidebar-title">
+                            <h1>UConn Quant</h1>
+                            <p>Momentum Strategy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" onclick="switchTab('dashboard')">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-item" onclick="switchTab('positions')">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Positions</span>
+                    </button>
+                    <button class="nav-item" onclick="switchTab('sectors')">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Sectors</span>
+                    </button>
+                    <!--
+                    <button class="nav-item" onclick="switchTab('news')">
+                        <i class="fas fa-newspaper"></i>
+                        <span>News Feed</span>
+                    </button>
+                    <button class="nav-item" onclick="openSettings()">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </button> -->
+                </nav>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <div class="topbar-left">
+                        <h2 id="page-title">Dashboard</h2>
+                    </div>
+                    <div class="topbar-actions">
+                        <div class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+                            <i class="fas fa-moon" id="theme-icon"></i>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONTENT AREA -->
+                <div class="content-area">
+                    <div class="content-wrapper">
+
+                        <!-- ===== DASHBOARD TAB ===== -->
+                        <div id="dashboard-tab" class="tab-content active">
+                            <!-- Performance Metrics -->
+                            <div class="metrics-grid" id="dashboard-metrics">
+                                <!-- Populated by JS -->
+                            </div>
+
+                            <!-- Active Performance Chart -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Active Performance</h3>
+                                    <div class="time-period-buttons">
+                                        <button class="period-btn" onclick="changeTimePeriod('1D')">Today</button>
+                                        <button class="period-btn" onclick="changeTimePeriod('1W')">1W</button>
+                                        <button class="period-btn" onclick="changeTimePeriod('1M')">1M</button>
+                                        <button class="period-btn active" onclick="changeTimePeriod('3M')">3M</button>
+                                        <button class="period-btn" onclick="changeTimePeriod('YTD')">YTD</button>
+                                        <button class="period-btn" onclick="changeTimePeriod('5Y')">5Y</button>
+                                        <button class="period-btn" onclick="changeTimePeriod('ITD')">Inception</button>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="performanceLineChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Charts -->
+                            <div class="chart-grid">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Asset Allocation by Sector</h3>
+                                    </div>
+                                    <div class="chart-container">
+                                        <canvas id="sectorPieChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Performance Overview</h3>
+                                    </div>
+                                    <div id="performance-stats">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== POSITIONS TAB ===== -->
+                        <div id="positions-tab" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">All Holdings</h3>
+                                </div>
+                                <div class="table-wrapper">
+                                    <table class="data-table" id="positions-table">
+                                        <!-- Populated by JS -->
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== SECTORS TAB ===== -->
+                        <div id="sectors-tab" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Sector Allocation</h3>
+                                    <div class="sector-controls">
+                                        <button class="sort-btn active" onclick="sortSectors('allocation')">Sort by Allocation</button>
+                                        <button class="sort-btn" onclick="sortSectors('return')">Sort by Return</button>
+                                    </div>
+                                </div>
+                                <div class="sector-list" id="sector-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
