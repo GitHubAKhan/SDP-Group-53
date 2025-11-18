@@ -597,6 +597,13 @@ async function fetchPortfolioHistory(period) {
     const apiKey = sessionStorage.getItem('alpaca_key');
     const apiSecret = sessionStorage.getItem('alpaca_secret');
 
+     // Custom range handlers
+    if (period === '5Y') {
+        return fetchCustomRangeHistory(apiKey, apiSecret, 5);
+    }
+    if (period === 'ITD') {
+        return fetchSinceInceptionHistory(apiKey, apiSecret);
+    }
     // Map period to Alpaca timeframe and period
     const periodMapping = {
         '1D': { timeframe: '5Min', period: '1D' },
@@ -604,8 +611,8 @@ async function fetchPortfolioHistory(period) {
         '1M': { timeframe: '1D', period: '1M' },
         '3M': { timeframe: '1D', period: '3M' },
         'YTD': { timeframe: '1D', period: '1A' }, // Use 1 year, will filter to YTD
-        '5Y': { timeframe: '1W', period: '5A' },
-        'ITD': { timeframe: '1W', period: 'all' }
+        '5Y': { customRange: '5Y' },
+        'ITD': { customRange: 'ITD' }
     };
 
     const config = periodMapping[period] || periodMapping['3M'];
@@ -673,6 +680,95 @@ async function fetchPortfolioHistory(period) {
     } catch (error) {
         console.error('Error fetching portfolio history:', error);
         return generateFallbackData(period);
+    }
+}
+
+async function fetchCustomRangeHistory(apiKey, apiSecret, yearsBack) {
+    const end = new Date();
+    const start = new Date();
+    start.setFullYear(end.getFullYear() - yearsBack);
+
+    const url =
+        `https://paper-api.alpaca.markets/v2/account/portfolio/history?` +
+        `start=${start.toISOString().split("T")[0]}` +
+        `&end=${end.toISOString().split("T")[0]}` +
+        `&timeframe=1D`;
+
+    return fetchAndFormatHistory(url, apiKey, apiSecret);
+}
+
+async function fetchSinceInceptionHistory(apiKey, apiSecret) {
+    // Fetch account metadata for creation date
+    const accountResp = await fetch(
+        'https://paper-api.alpaca.markets/v2/account',
+        {
+            headers: {
+                'APCA-API-KEY-ID': apiKey,
+                'APCA-API-SECRET-KEY': apiSecret
+            }
+        }
+    );
+
+    const account = await accountResp.json();
+
+    // If Alpaca returns no created_at, bail out safely
+    if (!account.created_at) {
+        console.warn("Missing created_at, using fallback for ITD.");
+        return generateFallbackData('ITD');
+    }
+
+    const start = new Date(account.created_at);
+    const end = new Date();
+
+    // If the account is extremely new (< 5 days), create a smooth fake history
+    const days = (end - start) / 86400000;
+    if (days < 5) {
+        console.warn("Account too new, generating smooth ITD instead.");
+        return generateFallbackData('ITD');
+    }
+
+    const url =
+        `https://paper-api.alpaca.markets/v2/account/portfolio/history?` +
+        `start=${start.toISOString().split("T")[0]}` +
+        `&end=${end.toISOString().split("T")[0]}` +
+        `&timeframe=1D`;
+
+    return fetchAndFormatHistory(url, apiKey, apiSecret);
+}
+
+
+async function fetchAndFormatHistory(url, apiKey, apiSecret) {
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'APCA-API-KEY-ID': apiKey,
+                'APCA-API-SECRET-KEY': apiSecret
+            }
+        });
+
+        const history = await response.json();
+
+        if (!history.timestamp || !history.equity) {
+            console.error("Invalid Alpaca history:", history);
+            return generateFallbackData('5Y');
+        }
+
+        let labels = [];
+        let values = [];
+
+        for (let i = 0; i < history.timestamp.length; i++) {
+            const date = new Date(history.timestamp[i] * 1000);
+            labels.push(
+                date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+            );
+            values.push(history.equity[i]);
+        }
+
+        return { labels, values };
+
+    } catch (err) {
+        console.error("History fetch error:", err);
+        return generateFallbackData('5Y');
     }
 }
 
