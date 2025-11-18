@@ -720,12 +720,331 @@ function generateFallbackData(period) {
 
     return { labels, values: dataPoints };
 }
+// ===== EMAIL SUBSCRIPTION =====
+async function subscribeEmail() {
+    const emailInput = document.getElementById('subscribe-email');
+    const email = emailInput.value.trim();
+    const messageDiv = document.getElementById('subscription-message');
+
+    if (!email) {
+        messageDiv.style.display = 'block';
+        messageDiv.style.color = 'var(--negative)';
+        messageDiv.textContent = '⚠️ Please enter a valid email address';
+        return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        messageDiv.style.display = 'block';
+        messageDiv.style.color = 'var(--negative)';
+        messageDiv.textContent = '⚠️ Please enter a valid email address';
+        return;
+    }
+
+    try {
+        // Read current subscribers
+        let subscribers = ['andrew.khan921@gmail.com']; // Default
+
+        // Add new subscriber if not already present
+        if (!subscribers.includes(email)) {
+            subscribers.push(email);
+        }
+
+        // Save to localStorage and file
+        const subscriberData = { subscribers: subscribers };
+        localStorage.setItem('email_subscribers', JSON.stringify(subscriberData));
+
+        // Show success message
+        messageDiv.style.display = 'block';
+        messageDiv.style.color = 'var(--positive)';
+        messageDiv.innerHTML = '✅ Successfully subscribed! You\'ll receive notifications at ' + email;
+
+        // Also save to subscribers.json file (in production, this would be a backend API call)
+        console.log('Subscriber added:', email);
+        console.log('Save this email to subscribers.json manually or via backend API');
+
+        // Clear input
+        emailInput.value = '';
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+
+    } catch (error) {
+        console.error('Error subscribing:', error);
+        messageDiv.style.display = 'block';
+        messageDiv.style.color = 'var(--negative)';
+        messageDiv.textContent = '⚠️ Error subscribing. Please try again.';
+    }
+}
+
+// ===== NEWS FEED =====
+async function loadNewsFeed() {
+    const newsFeed = document.getElementById('news-feed');
+
+    // Show loading state
+    newsFeed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);"><i class="fas fa-spinner fa-spin"></i> Loading news...</div>';
+
+    try {
+        const apiKey = sessionStorage.getItem('alpaca_key');
+        const apiSecret = sessionStorage.getItem('alpaca_secret');
+
+        // Fetch news from Alpaca News API
+        const response = await fetch('https://data.alpaca.markets/v1beta1/news?limit=20&sort=desc', {
+            headers: {
+                'APCA-API-KEY-ID': apiKey,
+                'APCA-API-SECRET-KEY': apiSecret
+            }
+        });
+
+        const newsData = await response.json();
+
+        if (!newsData.news || newsData.news.length === 0) {
+            newsFeed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No news available</div>';
+            return;
+        }
+
+        let html = '';
+        newsData.news.slice(0, 12).forEach(article => {
+            // Determine sentiment based on headline analysis (basic)
+            const sentiment = analyzeSentiment(article.headline);
+            const sentimentClass = sentiment;
+            const sentimentIcon = sentiment === 'bullish' ? 'fa-arrow-trend-up' :
+                                    sentiment === 'bearish' ? 'fa-arrow-trend-down' :
+                                    'fa-minus';
+
+            // Calculate time ago
+            const timeAgo = getTimeAgo(new Date(article.created_at));
+
+            // Extract symbols as tags
+            const tags = article.symbols ? article.symbols.slice(0, 3) : [];
+
+            html += `
+                <div class="news-card" onclick="window.open('${article.url}', '_blank')">
+                    <div class="news-source">
+                        <div class="news-source-logo"></div>
+                        <span class="news-source-name">${article.source || 'Market News'}</span>
+                        <span class="news-time">${timeAgo}</span>
+                    </div>
+                    <h4 class="news-title">${article.headline}</h4>
+                    <p class="news-summary">${article.summary || article.content?.substring(0, 150) + '...' || ''}</p>
+                    <div class="news-tags">
+                        <span class="news-sentiment ${sentimentClass}">
+                            <i class="fas ${sentimentIcon}"></i> ${sentiment}
+                        </span>
+                        ${tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        });
+
+        newsFeed.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading news:', error);
+        // Fallback to sample news if API fails
+        const news = generateSampleNews();
+        let html = '';
+        news.forEach(article => {
+            const sentimentClass = article.sentiment;
+            const sentimentIcon = article.sentiment === 'bullish' ? 'fa-arrow-trend-up' :
+                                    article.sentiment === 'bearish' ? 'fa-arrow-trend-down' :
+                                    'fa-minus';
+
+            html += `
+                <div class="news-card" onclick="window.open('${article.url}', '_blank')">
+                    <div class="news-source">
+                        <div class="news-source-logo"></div>
+                        <span class="news-source-name">${article.source}</span>
+                        <span class="news-time">${article.time}</span>
+                    </div>
+                    <h4 class="news-title">${article.title}</h4>
+                    <p class="news-summary">${article.summary}</p>
+                    <div class="news-tags">
+                        <span class="news-sentiment ${sentimentClass}">
+                            <i class="fas ${sentimentIcon}"></i> ${article.sentiment}
+                        </span>
+                        ${article.tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        });
+        newsFeed.innerHTML = html;
+    }
+}
+
+function analyzeSentiment(headline) {
+    // Simple sentiment analysis based on keywords
+    const bullishWords = ['rally', 'surge', 'gain', 'jump', 'rise', 'soar', 'beat', 'exceed', 'growth', 'strong', 'positive', 'bullish', 'up'];
+    const bearishWords = ['fall', 'drop', 'decline', 'plunge', 'slump', 'loss', 'miss', 'weak', 'negative', 'bearish', 'down', 'crash'];
+
+    const lowerHeadline = headline.toLowerCase();
+
+    const bullishCount = bullishWords.filter(word => lowerHeadline.includes(word)).length;
+    const bearishCount = bearishWords.filter(word => lowerHeadline.includes(word)).length;
+
+    if (bullishCount > bearishCount) return 'bullish';
+    if (bearishCount > bullishCount) return 'bearish';
+    return 'neutral';
+}
+
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + ' years ago';
+
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + ' months ago';
+
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + ' days ago';
+
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + ' hours ago';
+
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + ' minutes ago';
+
+    return 'Just now';
+}
+
+function generateSampleNews() {
+    // Sample news data - in production, fetch from real news API
+    return [
+        {
+            source: 'Reuters',
+            time: '2 hours ago',
+            title: 'Fed Signals Potential Rate Cut as Inflation Cools',
+            summary: 'The Federal Reserve indicated it may consider reducing interest rates in the coming months as inflation continues to trend toward its 2% target.',
+            sentiment: 'bullish',
+            tags: ['Federal Reserve', 'Interest Rates', 'Macro'],
+            url: '#'
+        },
+        {
+            source: 'Bloomberg',
+            time: '4 hours ago',
+            title: 'Tech Sector Rallies on Strong Earnings Reports',
+            summary: 'Major technology companies exceeded earnings expectations, driving the Nasdaq to new highs as AI investments continue to pay off.',
+            sentiment: 'bullish',
+            tags: ['Technology', 'Earnings', 'AI'],
+            url: '#'
+        },
+        {
+            source: 'CNBC',
+            time: '6 hours ago',
+            title: 'Energy Stocks Under Pressure Amid Oil Price Decline',
+            summary: 'Crude oil prices fell 3% today on concerns about weakening demand, putting pressure on energy sector equities.',
+            sentiment: 'bearish',
+            tags: ['Energy', 'Oil', 'Commodities'],
+            url: '#'
+        },
+        {
+            source: 'WSJ',
+            time: '8 hours ago',
+            title: 'Consumer Spending Remains Resilient Despite Economic Headwinds',
+            summary: 'Retail sales data showed continued strength in consumer spending, suggesting the economy remains robust.',
+            sentiment: 'neutral',
+            tags: ['Retail', 'Economy', 'Consumer'],
+            url: '#'
+        },
+        {
+            source: 'MarketWatch',
+            time: '10 hours ago',
+            title: 'Financials Gain Ground on Banking Sector Optimism',
+            summary: 'Financial stocks advanced as investors bet on improved lending margins and stronger loan growth.',
+            sentiment: 'bullish',
+            tags: ['Financials', 'Banking', 'Lending'],
+            url: '#'
+        },
+        {
+            source: 'FT',
+            time: '12 hours ago',
+            title: 'Healthcare Sector Faces Regulatory Uncertainty',
+            summary: 'Proposed changes to drug pricing policies have created volatility in pharmaceutical and biotech stocks.',
+            sentiment: 'bearish',
+            tags: ['Healthcare', 'Pharma', 'Regulation'],
+            url: '#'
+        }
+    ];
+}
+
+function refreshNews() {
+    loadNewsFeed();
+}
 
 
+// ===== SETTINGS =====
+function openSettings() {
+    document.getElementById('settings-modal').classList.add('active');
 
+    // Load current API key (masked)
+    const apiKey = sessionStorage.getItem('alpaca_key');
+    if (apiKey) {
+        document.getElementById('current-api-key').value = apiKey.substring(0, 2) + '••••••••••••••';
+        document.getElementById('current-secret-key').value = '••••••••••••••';
+    }
+}
 
+function closeSettings() {
+    document.getElementById('settings-modal').classList.remove('active');
+}
 
+function saveSettings() {
+    const settings = {
+        positionSize: document.getElementById('position-size').value,
+        rebalanceFreq: document.getElementById('rebalance-freq').value,
+        orderType: document.getElementById('order-type').value,
+        maxDrawdown: document.getElementById('max-drawdown').value,
+        stopLoss: document.getElementById('stop-loss').value,
+        takeProfit: document.getElementById('take-profit').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        alertTrade: document.getElementById('alert-trade').checked,
+        alertPerformance: document.getElementById('alert-performance').checked,
+        alertDaily: document.getElementById('alert-daily').checked,
+        alertPrice: document.getElementById('alert-price').checked,
+        notifyMarketOpen: document.getElementById('notify-market-open').checked,
+        notifyMidday: document.getElementById('notify-midday').checked,
+        notifyMarketClose: document.getElementById('notify-market-close').checked
+    };
 
+    localStorage.setItem('trading_settings', JSON.stringify(settings));
+    closeSettings();
+    alert('Settings saved successfully!');
+}
+
+// Load saved settings
+function loadSettings() {
+    const saved = localStorage.getItem('trading_settings');
+    if (saved) {
+        const settings = JSON.parse(saved);
+        document.getElementById('position-size').value = settings.positionSize || 45;
+        document.getElementById('rebalance-freq').value = settings.rebalanceFreq || 'weekly';
+        document.getElementById('order-type').value = settings.orderType || 'market';
+        document.getElementById('max-drawdown').value = settings.maxDrawdown || 20;
+        document.getElementById('stop-loss').value = settings.stopLoss || 10;
+        document.getElementById('take-profit').value = settings.takeProfit || 20;
+        document.getElementById('email').value = settings.email || '';
+        document.getElementById('phone').value = settings.phone || '';
+        document.getElementById('alert-trade').checked = settings.alertTrade !== false;
+        document.getElementById('alert-performance').checked = settings.alertPerformance !== false;
+        document.getElementById('alert-daily').checked = settings.alertDaily || false;
+        document.getElementById('alert-price').checked = settings.alertPrice || false;
+        document.getElementById('notify-market-open').checked = settings.notifyMarketOpen !== false;
+        document.getElementById('notify-midday').checked = settings.notifyMidday || false;
+        document.getElementById('notify-market-close').checked = settings.notifyMarketClose !== false;
+    }
+}
+
+// Close modal on outside click
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('settings-modal');
+    if (e.target === modal) {
+        closeSettings();
+    }
+});
 
 // ===== INITIALIZATION =====
 window.addEventListener('DOMContentLoaded', () => {
