@@ -597,7 +597,7 @@ async function fetchPortfolioHistory(period) {
     const apiKey = sessionStorage.getItem('alpaca_key');
     const apiSecret = sessionStorage.getItem('alpaca_secret');
 
-     // Custom range handlers
+     // Added custom range handlers, since Alpaca doesn't support 5Y or ITD directly
     if (period === '5Y') {
         return fetchCustomRangeHistory(apiKey, apiSecret, 5);
     }
@@ -611,8 +611,8 @@ async function fetchPortfolioHistory(period) {
         '1M': { timeframe: '1D', period: '1M' },
         '3M': { timeframe: '1D', period: '3M' },
         'YTD': { timeframe: '1D', period: '1A' }, // Use 1 year, will filter to YTD
-        '5Y': { customRange: '5Y' },
-        'ITD': { customRange: 'ITD' }
+        '5Y': { customRange: '5Y' },   // Handled separately since Alpaca doesn't support 5Y directly
+        'ITD': { customRange: 'ITD' }  // Handled separately since Alpaca doesn't support ITD directly
     };
 
     const config = periodMapping[period] || periodMapping['3M'];
@@ -683,7 +683,11 @@ async function fetchPortfolioHistory(period) {
     }
 }
 
+// Fetch history for custom range (e.g., 5 years)
 async function fetchCustomRangeHistory(apiKey, apiSecret, yearsBack) {
+    // Because Alpaca does not support "period=5A",
+    // we manually compute the start date (now - 5 years)
+    // and fetch daily historical equity values
     const end = new Date();
     const start = new Date();
     start.setFullYear(end.getFullYear() - yearsBack);
@@ -697,7 +701,16 @@ async function fetchCustomRangeHistory(apiKey, apiSecret, yearsBack) {
     return fetchAndFormatHistory(url, apiKey, apiSecret);
 }
 
+// Fetch history since account inception
 async function fetchSinceInceptionHistory(apiKey, apiSecret) {
+    // We first fetch the account metadata from Alpaca
+    // because this is the ONLY way to know when the
+    // account was created.
+
+    // Alpaca will only return equity history FROM the
+    // first activity date — so inception charts often
+    // look "short" for new paper accounts.
+
     // Fetch account metadata for creation date
     const accountResp = await fetch(
         'https://paper-api.alpaca.markets/v2/account',
@@ -736,8 +749,14 @@ async function fetchSinceInceptionHistory(apiKey, apiSecret) {
     return fetchAndFormatHistory(url, apiKey, apiSecret);
 }
 
-
+// Helper to fetch and format history data
 async function fetchAndFormatHistory(url, apiKey, apiSecret) {
+    // Converts Alpaca timestamps → chart labels.
+    //
+    // This is used for BOTH:
+    //   - Custom 5Y history
+    //   - Inception-to-date history
+
     try {
         const response = await fetch(url, {
             headers: {
