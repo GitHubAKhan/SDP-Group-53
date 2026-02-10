@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from alpaca_trader import AlpacaTrader
+from alpaca_trader_full import AlpacaTrader
 import requests
 
 app = Flask(__name__, static_folder='static', template_folder='templates')

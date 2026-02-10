@@ -1,0 +1,210 @@
+<!-- ===== NEWS FEED TAB ===== -->
+                        <div id="news-tab" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Market News & Updates</h3>
+                                    <button class="icon-btn" onclick="refreshNews()">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="news-grid" id="news-feed">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+
+<!-- ===== SETTINGS MODAL ===== -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Settings</h2>
+                <button class="modal-close" onclick="closeSettings()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Trading Parameters -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Trading Parameters
+                    </h3>
+                    <div class="settings-grid">
+                        <div class="settings-item">
+                            <label>Position Size</label>
+                            <input type="number" id="position-size" value="45" min="1" max="100">
+                        </div>
+                        <div class="settings-item">
+                            <label>Rebalancing Frequency</label>
+                            <select id="rebalance-freq">
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="settings-item">
+                            <label>Order Type</label>
+                            <select id="order-type">
+                                <option value="market" selected>Market Order</option>
+                                <option value="limit">Limit Order</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Management -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Risk Management
+                    </h3>
+                    <div class="settings-grid">
+                        <div class="settings-item">
+                            <label>Max Drawdown (%)</label>
+                            <input type="number" id="max-drawdown" value="20" min="1" max="50" step="1">
+                        </div>
+                        <div class="settings-item">
+                            <label>Default Stop Loss (%)</label>
+                            <input type="number" id="stop-loss" value="10" min="1" max="30" step="0.5">
+                        </div>
+                        <div class="settings-item">
+                            <label>Default Take Profit (%)</label>
+                            <input type="number" id="take-profit" value="20" min="1" max="100" step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-envelope"></i>
+                        Notification Preferences
+                    </h3>
+                    <div class="settings-grid">
+                        <div class="settings-item">
+                            <label>Email Address</label>
+                            <input type="email" id="email" placeholder="your@email.com">
+                        </div>
+                        <div class="settings-item">
+                            <label>Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-bell"></i>
+                        Alert Settings
+                    </h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alert-trade" checked>
+                            <label for="alert-trade">Trade Confirmed</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alert-performance" checked>
+                            <label for="alert-performance">Major Performance Change</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alert-daily">
+                            <label for="alert-daily">Daily Performance Summary</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alert-price">
+                            <label for="alert-price">Price Alerts</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scheduled Notifications -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-clock"></i>
+                        Scheduled Notifications (US Eastern Time)
+                    </h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="notify-market-open" checked>
+                            <label for="notify-market-open">Market Open Summary (9:30 AM ET)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="notify-midday">
+                            <label for="notify-midday">Midday Update (12:00 PM ET) - Optional</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="notify-market-close" checked>
+                            <label for="notify-market-close">End of Day Summary (5:00 PM ET)</label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px; color: var(--text-secondary);">
+                        <i class="fas fa-info-circle"></i> Notifications include portfolio performance, top movers, market insights, and trading tips.
+                    </div>
+                </div>
+
+                <!-- Email Subscription -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-envelope-open-text"></i>
+                        Email Notification Subscription
+                    </h3>
+                    <div class="settings-item full-width">
+                        <label>Subscribe to Trading Notifications</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="email" id="subscribe-email" placeholder="Enter your email" style="flex: 1;">
+                            <button onclick="subscribeEmail()" style="padding: 12px 24px; background: var(--positive); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                <i class="fas fa-bell"></i> Subscribe
+                            </button>
+                        </div>
+                        <div id="subscription-message" style="margin-top: 10px; font-size: 14px; display: none;"></div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div style="margin-top: 16px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; font-size: 13px; color: #92400e;">
+                        <div style="font-weight: 600; margin-bottom: 5px;">⚙️ To Complete Subscription:</div>
+                        <div style="margin-bottom: 8px;">After clicking Subscribe above, run this command in PowerShell:</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-family: 'Courier New', monospace; color: #1e3a8a; margin: 8px 0;">
+                            python add_subscriber.py
+                        </code>
+                        <div style="font-size: 12px; color: #78350f; margin-top: 8px;">
+                            Or manually add the email to <strong>subscribers.json</strong>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 12px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 8px; font-size: 13px; color: #1e40af;">
+                        <div style="font-weight: 600; margin-bottom: 5px;">📧 What You'll Receive:</div>
+                        <ul style="margin: 5px 0 0 20px; padding: 0;">
+                            <li>Market open briefing with portfolio snapshot</li>
+                            <li>End of day performance report with top movers</li>
+                            <li>Market insights and trading tips</li>
+                            <li>No spam, just valuable trading updates</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- API Settings -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">
+                        <i class="fas fa-key"></i>
+                        API Configuration
+                    </h3>
+                    <div class="settings-grid">
+                        <div class="settings-item">
+                            <label>Current API Key</label>
+                            <input type="text" id="current-api-key" placeholder="PK••••••••••••••" disabled>
+                        </div>
+                        <div class="settings-item">
+                            <label>Current Secret Key</label>
+                            <input type="password" id="current-secret-key" placeholder="••••••••••••••" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
