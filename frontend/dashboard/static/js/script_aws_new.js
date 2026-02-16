@@ -110,7 +110,6 @@ function switchTab(tabName) {
     }
 }
 
-//Revised loadDashboardData to handle API Gateway and Lambda response formats, with enhanced error handling and logging
 async function loadDashboardData() {
   try {
     const apiKey = sessionStorage.getItem('alpaca_key');
@@ -204,6 +203,53 @@ async function loadDashboardData() {
     alert(`Failed to load dashboard: ${error.message}\n\nCheck browser console for details.`);
   }
 }
+
+/*
+// ===== DATA LOADING =====
+async function loadDashboardData() {
+  try {
+    const apiKey = sessionStorage.getItem('alpaca_key');
+    const apiSecret = sessionStorage.getItem('alpaca_secret');
+
+    // --- Fetch account data from API Gateway ---
+    const accountResponse = await fetch(`${API_BASE_URL}/account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey, apiSecret })
+    });
+    
+    if (!accountResponse.ok) {
+      throw new Error(`Account API error: ${accountResponse.status}`);
+    }
+    const account = await accountResponse.json();
+
+    // --- Fetch positions data from API Gateway ---
+    const positionsResponse = await fetch(`${API_BASE_URL}/positions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey, apiSecret })
+    });
+    
+    if (!positionsResponse.ok) {
+      throw new Error(`Positions API error: ${positionsResponse.status}`);
+    }
+    const positions = await positionsResponse.json();
+
+    // Render results
+    populateDashboard(account, positions);
+    populatePositionsTable(positions);
+    allPositions = positions;
+    allSectors = groupBySector(positions);
+    populateSectorsList(allSectors);
+    createSectorPieChart();
+    createPerformanceLineChart();
+
+  } catch (error) {
+    console.error("Error loading dashboard data:", error);
+    alert(`Failed to load dashboard: ${error.message}\n\nPlease check:\n1. Your API credentials are correct\n2. API Gateway URL is set in script.js\n3. Lambda functions are deployed`);
+  }
+}
+  */
 
 // ===== DASHBOARD =====
 function populateDashboard(account, positions) {
@@ -912,65 +958,117 @@ function generateFallbackData(period) {
 
     return { labels, values: dataPoints };
 }
+
+
+
 // ===== EMAIL SUBSCRIPTION =====
+const SUBSCRIBE_API_URL = 'https://hdo6lukv03.execute-api.us-east-1.amazonaws.com/prod/subscribe';
 async function subscribeEmail() {
     const emailInput = document.getElementById('subscribe-email');
     const email = emailInput.value.trim();
     const messageDiv = document.getElementById('subscription-message');
+    const subscribeBtn = event?.target || document.querySelector('button[onclick="subscribeEmail()"]');
+
 
     if (!email) {
-        messageDiv.style.display = 'block';
-        messageDiv.style.color = 'var(--negative)';
-        messageDiv.textContent = '⚠️ Please enter a valid email address';
+        showSubscriptionMessage(messageDiv, 'error', '⚠️ Please enter a valid email address');
         return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        messageDiv.style.display = 'block';
-        messageDiv.style.color = 'var(--negative)';
-        messageDiv.textContent = '⚠️ Please enter a valid email address';
+        showSubscriptionMessage(messageDiv, 'error', '⚠️ Please enter a valid email address');
         return;
     }
 
-    try {
-        // Read current subscribers
-        let subscribers = ['andrew.khan921@gmail.com']; // Default
+    // Disable button and show loading state
+    const originalBtnText = subscribeBtn.innerHTML;
+    subscribeBtn.disabled = true;
+    subscribeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
 
-        // Add new subscriber if not already present
-        if (!subscribers.includes(email)) {
-            subscribers.push(email);
+    try {
+        // Call Lambda function via API Gateway
+        const response = await fetch(SUBSCRIBE_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            if (data.alreadySubscribed) {
+                showSubscriptionMessage(messageDiv, 'info', `ℹ️ ${data.message}`);
+            } else {
+                showSubscriptionMessage(messageDiv, 'success', `✅ ${data.message}`);
+                emailInput.value = ''; // Clear input on success
+            }
+        } else {
+            showSubscriptionMessage(
+                messageDiv, 
+                'error', 
+                `⚠️ ${data.message || 'Subscription failed. Please try again.'}`
+            );
         }
 
-        // Save to localStorage and file
-        const subscriberData = { subscribers: subscribers };
-        localStorage.setItem('email_subscribers', JSON.stringify(subscriberData));
-
-        // Show success message
-        messageDiv.style.display = 'block';
-        messageDiv.style.color = 'var(--positive)';
-        messageDiv.innerHTML = '✅ Successfully subscribed! You\'ll receive notifications at ' + email;
-
-        // Also save to subscribers.json file (in production, this would be a backend API call)
-        console.log('Subscriber added:', email);
-        console.log('Save this email to subscribers.json manually or via backend API');
-
-        // Clear input
-        emailInput.value = '';
-
-        // Hide message after 5 seconds
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
-
     } catch (error) {
-        console.error('Error subscribing:', error);
-        messageDiv.style.display = 'block';
-        messageDiv.style.color = 'var(--negative)';
-        messageDiv.textContent = '⚠️ Error subscribing. Please try again.';
+        console.error('Subscription error:', error);
+        
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+            showSubscriptionMessage(
+                messageDiv, 
+                'error', 
+                '⚠️ Unable to connect to subscription service. Please check your internet connection.'
+            );
+        } else {
+            showSubscriptionMessage(
+                messageDiv, 
+                'error', 
+                '⚠️ An unexpected error occurred. Please try again later.'
+            );
+        }
+    } finally {
+        // Re-enable button
+        subscribeBtn.disabled = false;
+        subscribeBtn.innerHTML = originalBtnText;
     }
 }
+
+function showSubscriptionMessage(messageDiv, type, text) {
+    messageDiv.style.display = 'block';
+    
+    const colors = {
+        success: 'var(--positive)',
+        error: 'var(--negative)',
+        info: '#3b82f6'
+    };
+    
+    messageDiv.style.color = colors[type] || colors.info;
+    messageDiv.textContent = text;
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Allow Enter key to submit
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('subscribe-email');
+    if (emailInput) {
+        emailInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                subscribeEmail();
+            }
+        });
+    }
+});
+
+
 
 // ===== NEWS FEED =====
 async function loadNewsFeed() {
@@ -1249,3 +1347,4 @@ window.addEventListener('DOMContentLoaded', () => {
         loadDashboardData();
     }
 });
+window.subscribeEmail = subscribeEmail;
