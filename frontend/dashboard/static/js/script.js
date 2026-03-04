@@ -5,6 +5,8 @@ let currentSortBy = 'allocation';
 let allPositions = [];
 let allSectors = {};
 let performanceData = [];
+const FINNHUB_API_KEY = 'd6etk0hr01qvn4o1162gd6etk0hr01qvn4o11630'
+const MARKETAUX_API_KEY = 'P0z2oBlZVX9t5Uq131ZVUQ3L69x8Tt5Qr8dn8pol'; 
 
 // ===== THEME TOGGLE =====
 function toggleTheme() {
@@ -896,6 +898,135 @@ async function subscribeEmail() {
 }
 
 // ===== NEWS FEED =====
+let newsCache = null;
+let newsCacheTime = null;
+
+async function loadNewsFeed() {
+    const newsFeed = document.getElementById('news-feed');
+
+    // Serve cache if less than 10 minutes old (prevents burning API limits on every tab switch)
+    if (newsCache && newsCacheTime && (Date.now() - newsCacheTime) < 10 * 60 * 1000) {
+        console.log('Serving news from cache');
+        renderNewsCards(newsCache);
+        return;
+    }
+
+    newsFeed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);"><i class="fas fa-spinner fa-spin"></i> Loading news...</div>';
+
+    const results = await Promise.allSettled([
+
+        // --- Alpaca ---
+        (async () => {
+            const apiKey = sessionStorage.getItem('alpaca_key');
+            const apiSecret = sessionStorage.getItem('alpaca_secret');
+            const response = await fetch('https://data.alpaca.markets/v1beta1/news?limit=10&sort=desc', {
+                headers: { 'APCA-API-KEY-ID': apiKey, 'APCA-API-SECRET-KEY': apiSecret }
+            });
+            if (!response.ok) throw new Error(`Alpaca: ${response.status}`);
+            const data = await response.json();
+            console.log(`Alpaca: ${(data.news || []).length} articles`);
+            return (data.news || []).map(a => ({
+                source: a.source || 'Market News',
+                title: a.headline,
+                summary: a.summary || a.content?.substring(0, 150) + '...' || '',
+                url: a.url,
+                timestamp: new Date(a.created_at).getTime(),
+                time: getTimeAgo(new Date(a.created_at)),
+                tags: (a.symbols || []).slice(0, 3),
+                sentiment: analyzeSentiment(a.headline)
+            }));
+        })(),
+
+        // --- Finnhub ---
+        (async () => {
+            const response = await fetch(`https://finnhub.io/api/v1/news?category=general&token=${FINNHUB_API_KEY}`);
+            if (!response.ok) throw new Error(`Finnhub: ${response.status}`);
+            const data = await response.json();
+            console.log(`Finnhub: ${(data || []).length} articles`);
+            return (data || []).slice(0, 8).map(a => ({
+                source: a.source || 'Finnhub',
+                title: a.headline,
+                summary: a.summary || '',
+                url: a.url,
+                timestamp: new Date(a.datetime * 1000).getTime(),
+                time: getTimeAgo(new Date(a.datetime * 1000)),
+                tags: [a.category || 'Market'].filter(Boolean),
+                sentiment: analyzeSentiment(a.headline)
+            }));
+        })(),
+
+        // --- Marketaux ---
+        (async () => {
+            const response = await fetch(`https://api.marketaux.com/v1/news/all?language=en&limit=6&api_token=${MARKETAUX_API_KEY}`);
+            if (!response.ok) throw new Error(`Marketaux: ${response.status}`);
+            const data = await response.json();
+            console.log(`Marketaux: ${(data.data || []).length} articles`);
+            return (data.data || []).map(a => ({
+                source: a.source || 'Marketaux',
+                title: a.title,
+                summary: a.description || '',
+                url: a.url,
+                timestamp: new Date(a.published_at).getTime(),
+                time: getTimeAgo(new Date(a.published_at)),
+                tags: (a.entities || []).slice(0, 3).map(e => e.symbol).filter(Boolean),
+                sentiment: analyzeSentiment(a.title)
+            }));
+        })()
+
+    ]);
+
+    const [alpacaArticles, finnhubArticles, marketauxArticles] = results.map((r, i) => {
+        if (r.status === 'rejected') {
+            console.warn(`News source ${['Alpaca', 'Finnhub', 'Marketaux'][i]} failed:`, r.reason.message);
+            return [];
+        }
+        return r.value;
+    });
+
+    const allArticles = [...alpacaArticles, ...finnhubArticles, ...marketauxArticles]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 20);
+
+    if (allArticles.length === 0) {
+        renderNewsCards(generateSampleNews());
+        return;
+    }
+
+    newsCache = allArticles;
+    newsCacheTime = Date.now();
+    renderNewsCards(allArticles);
+}
+
+function renderNewsCards(articles) {
+    const newsFeed = document.getElementById('news-feed');
+    let html = '';
+    articles.forEach(article => {
+        const sentimentClass = article.sentiment;
+        const sentimentIcon = article.sentiment === 'bullish' ? 'fa-arrow-trend-up' :
+                              article.sentiment === 'bearish' ? 'fa-arrow-trend-down' : 'fa-minus';
+        html += `
+            <div class="news-card" onclick="window.open('${article.url}', '_blank')">
+                <div class="news-source">
+                    <div class="news-source-logo"></div>
+                    <span class="news-source-name">${article.source}</span>
+                    <span class="news-time">${article.time}</span>
+                </div>
+                <h4 class="news-title">${article.title}</h4>
+                <p class="news-summary">${article.summary}</p>
+                <div class="news-tags">
+                    <span class="news-sentiment ${sentimentClass}">
+                        <i class="fas ${sentimentIcon}"></i> ${article.sentiment}
+                    </span>
+                    ${article.tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    });
+    newsFeed.innerHTML = html;
+}
+
+/*Old version of loadNewsFeed before multi-source aggregation and caching. Keeping it here for reference in case we need to revert or debug Alpaca-specific issues. Note that this version only fetches from Alpaca and does not handle errors gracefully, which is why we rewrote it to the current version above.
+/*
 async function loadNewsFeed() {
     const newsFeed = document.getElementById('news-feed');
 
@@ -988,6 +1119,7 @@ async function loadNewsFeed() {
         newsFeed.innerHTML = html;
     }
 }
+    */
 
 function analyzeSentiment(headline) {
     // Simple sentiment analysis based on keywords

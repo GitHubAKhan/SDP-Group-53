@@ -73,6 +73,10 @@
                         <i class="fas fa-newspaper"></i>
                         <span>News Feed</span>
                     </button>
+                    <button class="nav-item" onclick="switchTab('quant-ai')">
+                        <i class="fas fa-robot"></i>
+                        <span>Quant AI</span>
+                    </button>
                     <button class="nav-item" onclick="openSettings()">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
@@ -194,6 +198,63 @@
                         </div>
 
 
+                        <!-- ===== QUANT AI TAB ===== -->
+                        <div id="quant-ai-tab" class="tab-content">
+                            <div class="quant-ai-container">
+                                <!-- Chat history sidebar -->
+                                <div class="chat-history-sidebar">
+                                    <div class="chat-history-header">
+                                        <span>Chat History</span>
+                                        <button class="new-chat-btn" onclick="startNewChat()">
+                                            <i class="fas fa-plus"></i> New
+                                        </button>
+                                    </div>
+                                    <div class="chat-history-list" id="chat-history-list">
+                                        <div class="chat-history-item active" id="chat-session-1" onclick="loadChat('chat-session-1')">
+                                            <i class="fas fa-comment-dots"></i>
+                                            <span>New Conversation</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Main chat area -->
+                                <div class="chat-main">
+                                    <div class="chat-messages" id="chat-messages">
+                                        <div class="chat-welcome">
+                                            <div class="chat-welcome-logo">
+                                                <img src="assets/husky_logo.jpg" alt="UConn Quant AI">
+                                            </div>
+                                            <h2>Quant AI Assistant</h2>
+                                            <p>Ask me anything about your portfolio, market trends, trading strategies, or financial analysis.</p>
+                                            <div class="chat-suggestions">
+                                                <button class="suggestion-chip" onclick="sendSuggestion('What is momentum trading and how does it work?')">What is momentum trading?</button>
+                                                <button class="suggestion-chip" onclick="sendSuggestion('Analyze the current market conditions and key risks to watch.')">Analyze market conditions</button>
+                                                <button class="suggestion-chip" onclick="sendSuggestion('Explain sector rotation strategy in simple terms.')">Explain sector rotation</button>
+                                                <button class="suggestion-chip" onclick="sendSuggestion('What are the best risk management techniques for an algorithmic portfolio?')">Risk management tips</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Input area -->
+                                    <div class="chat-input-area">
+                                        <div class="chat-input-wrapper">
+                                            <textarea
+                                                id="chat-input"
+                                                placeholder="Ask Quant AI anything about markets, strategies, or your portfolio..."
+                                                rows="1"
+                                                onkeydown="handleChatKeydown(event)"
+                                                oninput="autoResize(this)"
+                                            ></textarea>
+                                            <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        </div>
+                                        <div class="chat-disclaimer">Quant AI can make mistakes. Verify important financial decisions independently.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     <!-- ===== SETTINGS MODAL ===== -->
                         <div class="modal" id="settings-modal">
                             <div class="modal-content">
@@ -212,11 +273,27 @@
                                         </h3>
                                         <div class="settings-grid">
                                             <div class="settings-item">
-                                                <label>Position Size</label>
+                                                <label>
+                                                    Position Size
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">
+                                                            Maximum number of stocks to hold in portfolio at once
+                                                        </span>
+                                                    </span>
+                                                </label>
                                                 <input type="number" id="position-size" value="45" min="1" max="100">
                                             </div>
                                             <div class="settings-item">
-                                                <label>Rebalancing Frequency</label>
+                                                <label>
+                                                    Rebalancing Frequency
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">
+                                                            How often the portfolio adjusts its holdings
+                                                        </span>
+                                                    </span>
+                                                </label>
                                                 <select id="rebalance-freq">
                                                     <option value="daily">Daily</option>
                                                     <option value="weekly" selected>Weekly</option>
@@ -224,7 +301,15 @@
                                                 </select>
                                             </div>
                                             <div class="settings-item">
-                                                <label>Order Type</label>
+                                                <label>
+                                                    Order Type
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">
+                                                            Market orders execute immediately at current price; limit orders execute at specific price
+                                                        </span>
+                                                    </span>
+                                                </label>
                                                 <select id="order-type">
                                                     <option value="market" selected>Market Order</option>
                                                     <option value="limit">Limit Order</option>
@@ -241,86 +326,40 @@
                                         </h3>
                                         <div class="settings-grid">
                                             <div class="settings-item">
-                                                <label>Max Drawdown (%)</label>
+                                                <label>
+                                                    Max Drawdown (%)
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">
+                                                            Maximum allowed portfolio decline from peak before triggering alerts
+                                                        </span>
+                                                    </span>
+                                                </label>
+
                                                 <input type="number" id="max-drawdown" value="20" min="1" max="50" step="1">
                                             </div>
                                             <div class="settings-item">
-                                                <label>Default Stop Loss (%)</label>
+                                                <label>
+                                                    Default Stop Loss (%)
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">
+                                                            Automatically sell if position drops by this percentage
+                                                        </span>
+                                                    </span>
+                                                </label>
                                                 <input type="number" id="stop-loss" value="10" min="1" max="30" step="0.5">
                                             </div>
                                             <div class="settings-item">
-                                                <label>Default Take Profit (%)</label>
+                                                <label class="tooltip-label">
+                                                    Default Take Profit (%)
+                                                    <span class="info-tooltip">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        <span class="tooltip-text">Automatically sell if position gains by this percentage</span>
+                                                    </span>
+                                                </label>
                                                 <input type="number" id="take-profit" value="20" min="1" max="100" step="0.5">
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Notifications -->
-                                    <div class="settings-section">
-                                        <h3 class="settings-section-title">
-                                            <i class="fas fa-envelope"></i>
-                                            Notification Preferences
-                                        </h3>
-                                        <div class="settings-grid">
-                                            <div class="settings-item">
-                                                <label>Email Address</label>
-                                                <input type="email" id="email" placeholder="your@email.com">
-                                            </div>
-                                            <div class="settings-item">
-                                                <label>Phone Number</label>
-                                                <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Alerts -->
-                                    <div class="settings-section">
-                                        <h3 class="settings-section-title">
-                                            <i class="fas fa-bell"></i>
-                                            Alert Settings
-                                        </h3>
-                                        <div class="checkbox-group">
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="alert-trade" checked>
-                                                <label for="alert-trade">Trade Confirmed</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="alert-performance" checked>
-                                                <label for="alert-performance">Major Performance Change</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="alert-daily">
-                                                <label for="alert-daily">Daily Performance Summary</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="alert-price">
-                                                <label for="alert-price">Price Alerts</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Scheduled Notifications -->
-                                    <div class="settings-section">
-                                        <h3 class="settings-section-title">
-                                            <i class="fas fa-clock"></i>
-                                            Scheduled Notifications (US Eastern Time)
-                                        </h3>
-                                        <div class="checkbox-group">
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="notify-market-open" checked>
-                                                <label for="notify-market-open">Market Open Summary (9:30 AM ET)</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="notify-midday">
-                                                <label for="notify-midday">Midday Update (12:00 PM ET) - Optional</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="notify-market-close" checked>
-                                                <label for="notify-market-close">End of Day Summary (5:00 PM ET)</label>
-                                            </div>
-                                        </div>
-                                        <div style="margin-top: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px; color: var(--text-secondary);">
-                                            <i class="fas fa-info-circle"></i> Notifications include portfolio performance, top movers, market insights, and trading tips.
                                         </div>
                                     </div>
 
@@ -341,19 +380,7 @@
                                             <div id="subscription-message" style="margin-top: 10px; font-size: 14px; display: none;"></div>
                                         </div>
 
-                                        <!-- Instructions -->
-                                        <div style="margin-top: 16px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; font-size: 13px; color: #92400e;">
-                                            <div style="font-weight: 600; margin-bottom: 5px;">⚙️ To Complete Subscription:</div>
-                                            <div style="margin-bottom: 8px;">After clicking Subscribe above, run this command in PowerShell:</div>
-                                            <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-family: 'Courier New', monospace; color: #1e3a8a; margin: 8px 0;">
-                                                python add_subscriber.py
-                                            </code>
-                                            <div style="font-size: 12px; color: #78350f; margin-top: 8px;">
-                                                Or manually add the email to <strong>subscribers.json</strong>
-                                            </div>
-                                        </div>
-
-                                        <div style="margin-top: 16px; padding: 12px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 8px; font-size: 13px; color: #1e40af;">
+                                        <div style="margin-top: 16px; padding: 12px; background: #dbeafe; border-left: 4px solid #182e53; border-radius: 8px; font-size: 13px; color: #1e40af;">
                                             <div style="font-weight: 600; margin-bottom: 5px;">📧 What You'll Receive:</div>
                                             <ul style="margin: 5px 0 0 20px; padding: 0;">
                                                 <li>Market open briefing with portfolio snapshot</li>
@@ -361,24 +388,6 @@
                                                 <li>Market insights and trading tips</li>
                                                 <li>No spam, just valuable trading updates</li>
                                             </ul>
-                                        </div>
-                                    </div>
-
-                                    <!-- API Settings -->
-                                    <div class="settings-section">
-                                        <h3 class="settings-section-title">
-                                            <i class="fas fa-key"></i>
-                                            API Configuration
-                                        </h3>
-                                        <div class="settings-grid">
-                                            <div class="settings-item">
-                                                <label>Current API Key</label>
-                                                <input type="text" id="current-api-key" placeholder="PK••••••••••••••" disabled>
-                                            </div>
-                                            <div class="settings-item">
-                                                <label>Current Secret Key</label>
-                                                <input type="password" id="current-secret-key" placeholder="••••••••••••••" disabled>
-                                            </div>
                                         </div>
                                     </div>
 

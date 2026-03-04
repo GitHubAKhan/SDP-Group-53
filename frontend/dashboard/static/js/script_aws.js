@@ -5,6 +5,8 @@ let currentSortBy = 'allocation';
 let allPositions = [];
 let allSectors = {};
 let performanceData = [];
+const FINNHUB_API_KEY = 'd6etk0hr01qvn4o1162gd6etk0hr01qvn4o11630'
+const MARKETAUX_API_KEY = 'P0z2oBlZVX9t5Uq131ZVUQ3L69x8Tt5Qr8dn8pol'; 
 const API_BASE_URL = 'https://hdo6lukv03.execute-api.us-east-1.amazonaws.com/prod';
 
 // Helper function to call Lambda via API Gateway
@@ -194,7 +196,7 @@ async function loadDashboardData() {
     populateDashboard(account, positions);
     populatePositionsTable(positions);
     allPositions = positions;
-    allSectors = groupBySector(positions);
+    allSectors = await groupBySector(positions);
     populateSectorsList(allSectors);
     createSectorPieChart();
     createPerformanceLineChart();
@@ -321,8 +323,8 @@ function populatePositionsTable(positions) {
                 <td>
                     <div class="stock-cell">
                         <div class="stock-logo" style="background: ${logoColor};">
-                            <img src="https://logo.clearbit.com/${getCompanyDomain(pos.symbol)}"
-                                    onerror="this.style.display='none'; this.parentElement.innerHTML='${pos.symbol.substring(0, 2)}';">
+                            <img src="https://assets.parqet.com/logos/symbol/${pos.symbol}?format=jpg"
+                                 onerror="handleLogoError(this, '${pos.symbol}')">
                         </div>
                         <div class="stock-info">
                             <span class="stock-symbol">${pos.symbol}</span>
@@ -352,6 +354,18 @@ function getCompanyDomain(symbol) {
     return domains[symbol] || `${symbol.toLowerCase()}.com`;
 }
 
+// Logo fallback chain: Parqet → Clearbit → text initials
+function handleLogoError(imgEl, symbol) {
+    const tried = imgEl.dataset.tried || '';
+    if (!tried.includes('clearbit')) {
+        imgEl.dataset.tried = 'clearbit';
+        imgEl.src = `https://logo.clearbit.com/${getCompanyDomain(symbol)}`;
+    } else {
+        const initials = symbol.substring(0, 2).toUpperCase();
+        imgEl.parentElement.innerHTML = `<span style="font-size:11px;font-weight:700;color:#fff;">${initials}</span>`;
+    }
+}
+
 function getCompanyName(symbol) {
     const names = {
         'PLTR': 'Palantir Technologies', 'APP': 'AppLovin Corp', 'AVGO': 'Broadcom Inc',
@@ -365,6 +379,8 @@ function getCompanyName(symbol) {
 }
 
 // ===== SECTORS =====
+
+/*
 function groupBySector(positions) {
     const sectors = {};
     const sectorMap = {
@@ -393,6 +409,82 @@ function groupBySector(positions) {
         if (!sectors[sectorName]) {
             sectors[sectorName] = [];
         }
+        sectors[sectorName].push(pos);
+    });
+
+    return sectors;
+} */
+
+// ===== SECTORS =====
+
+// Load sector cache from localStorage
+function loadSectorCache() {
+    try {
+        return JSON.parse(localStorage.getItem('sector_cache') || '{}');
+    } catch { return {}; }
+}
+
+// Save sector cache to localStorage
+function saveSectorCache(cache) {
+    localStorage.setItem('sector_cache', JSON.stringify(cache));
+}
+
+// Look up a single ticker's sector from Finnhub
+async function fetchSectorFromFinnhub(symbol, delayMs = 0) {
+    if (delayMs > 0) await new Promise(r => setTimeout(r, delayMs));
+    try {
+        const response = await fetch(
+            `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`
+        );
+        if (!response.ok) return 'Other';
+        const data = await response.json();
+        return mapFinnhubIndustryToSector(data.finnhubIndustry || '');
+    } catch {
+        return 'Other';
+    }
+}
+
+// Map Finnhub industry strings to standard GICS sector names
+function mapFinnhubIndustryToSector(industry) {
+    if (!industry) return 'Other';
+    const i = industry.toLowerCase();
+    if (i.includes('technology') || i.includes('semiconductor') || i.includes('software') || i.includes('hardware') || i.includes('electronic')) return 'Technology';
+    if (i.includes('financial') || i.includes('bank') || i.includes('insurance') || i.includes('asset management') || i.includes('capital markets') || i.includes('diversified financial') || i.includes('mortgage') || i.includes('thrift')) return 'Financials';
+    if (i.includes('health') || i.includes('pharma') || i.includes('biotech') || i.includes('medical') || i.includes('drug') || i.includes('life science')) return 'Health Care';
+    if (i.includes('communication') || i.includes('media') || i.includes('entertainment') || i.includes('broadcasting') || i.includes('publishing') || i.includes('telecom') || i.includes('wireless')) return 'Communication Services';
+    if (i.includes('consumer discretionary') || i.includes('retail') || i.includes('apparel') || i.includes('automobile') || i.includes('hotel') || i.includes('restaurant') || i.includes('leisure') || i.includes('luxury') || i.includes('travel') || i.includes('airline')) return 'Consumer Discretionary';
+    if (i.includes('consumer staples') || i.includes('food') || i.includes('beverage') || i.includes('household') || i.includes('personal product') || i.includes('tobacco') || i.includes('grocery')) return 'Consumer Staples';
+    if (i.includes('industrial') || i.includes('aerospace') || i.includes('defense') || i.includes('machinery') || i.includes('construction') || i.includes('transportation') || i.includes('logistics')) return 'Industrials';
+    if (i.includes('energy') || i.includes('oil') || i.includes('gas') || i.includes('coal') || i.includes('petroleum')) return 'Energy';
+    if (i.includes('utilities') || i.includes('electric') || i.includes('water') || i.includes('gas utility')) return 'Utilities';
+    if (i.includes('real estate') || i.includes('reit') || i.includes('property')) return 'Real Estate';
+    if (i.includes('material') || i.includes('chemical') || i.includes('mining') || i.includes('metal') || i.includes('gold') || i.includes('steel') || i.includes('paper') || i.includes('forest')) return 'Materials';
+    return 'Other';
+}
+
+// Main sector grouping — uses cache first, fetches Finnhub for unknowns
+async function groupBySector(positions) {
+    const cache = loadSectorCache();
+
+    // Find tickers not yet in cache
+    const uncached = positions.filter(p => !cache[p.symbol]);
+
+    if (uncached.length > 0) {
+        console.log(`Fetching sectors for ${uncached.length} uncached tickers...`);
+        // Space calls 200ms apart to stay within Finnhub free tier (60 req/min)
+        const results = await Promise.all(
+            uncached.map((pos, i) => fetchSectorFromFinnhub(pos.symbol, i * 200))
+        );
+        uncached.forEach((pos, i) => { cache[pos.symbol] = results[i]; });
+        saveSectorCache(cache);
+        console.log('Sector cache updated.');
+    }
+
+    // Group all positions using cache
+    const sectors = {};
+    positions.forEach(pos => {
+        const sectorName = cache[pos.symbol] || 'Other';
+        if (!sectors[sectorName]) sectors[sectorName] = [];
         sectors[sectorName].push(pos);
     });
 
@@ -545,6 +637,16 @@ function createSectorPieChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            cursor: 'pointer',
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const clickedLabel = labels[elements[0].index];
+                    navigateToSector(clickedLabel);
+                }
+            },
+            onHover: (event, elements) => {
+                event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+            },
             plugins: {
                 legend: {
                     position: 'right',
@@ -565,6 +667,32 @@ function createSectorPieChart() {
                     }
                 }
             }
+        }
+    });
+}
+
+// Navigate to sectors tab and open the clicked sector's dropdown
+function navigateToSector(sectorName) {
+    // Switch to sectors tab
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.textContent.trim().includes('Sectors')) item.classList.add('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('sectors-tab').classList.add('active');
+    document.getElementById('page-title').textContent = 'Sectors';
+
+    // Find and open the matching sector dropdown
+    const sectorItems = document.querySelectorAll('.sector-item');
+    sectorItems.forEach((item, index) => {
+        const name = item.querySelector('.sector-name').textContent.trim();
+        if (name === sectorName) {
+            const dropdown = document.getElementById(`sector-dropdown-${index}`);
+            if (dropdown && !dropdown.classList.contains('open')) {
+                dropdown.classList.add('open');
+            }
+            // Scroll it into view smoothly
+            setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         }
     });
 }
@@ -973,97 +1101,131 @@ async function subscribeEmail() {
 }
 
 // ===== NEWS FEED =====
+let newsCache = null;
+let newsCacheTime = null;
+
 async function loadNewsFeed() {
     const newsFeed = document.getElementById('news-feed');
 
-    // Show loading state
+    // Serve cache if less than 10 minutes old (prevents burning API limits on every tab switch)
+    if (newsCache && newsCacheTime && (Date.now() - newsCacheTime) < 10 * 60 * 1000) {
+        console.log('Serving news from cache');
+        renderNewsCards(newsCache);
+        return;
+    }
+
     newsFeed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);"><i class="fas fa-spinner fa-spin"></i> Loading news...</div>';
 
-    try {
-        const apiKey = sessionStorage.getItem('alpaca_key');
-        const apiSecret = sessionStorage.getItem('alpaca_secret');
+    const results = await Promise.allSettled([
 
-        // Fetch news from Alpaca News API
-        const response = await fetch('https://data.alpaca.markets/v1beta1/news?limit=20&sort=desc', {
-            headers: {
-                'APCA-API-KEY-ID': apiKey,
-                'APCA-API-SECRET-KEY': apiSecret
-            }
-        });
+        // --- Alpaca ---
+        (async () => {
+            const apiKey = sessionStorage.getItem('alpaca_key');
+            const apiSecret = sessionStorage.getItem('alpaca_secret');
+            const response = await fetch('https://data.alpaca.markets/v1beta1/news?limit=10&sort=desc', {
+                headers: { 'APCA-API-KEY-ID': apiKey, 'APCA-API-SECRET-KEY': apiSecret }
+            });
+            if (!response.ok) throw new Error(`Alpaca: ${response.status}`);
+            const data = await response.json();
+            console.log(`Alpaca: ${(data.news || []).length} articles`);
+            return (data.news || []).map(a => ({
+                source: a.source || 'Market News',
+                title: a.headline,
+                summary: a.summary || a.content?.substring(0, 150) + '...' || '',
+                url: a.url,
+                timestamp: new Date(a.created_at).getTime(),
+                time: getTimeAgo(new Date(a.created_at)),
+                tags: (a.symbols || []).slice(0, 3),
+                sentiment: analyzeSentiment(a.headline)
+            }));
+        })(),
 
-        const newsData = await response.json();
+        // --- Finnhub ---
+        (async () => {
+            const response = await fetch(`https://finnhub.io/api/v1/news?category=general&token=${FINNHUB_API_KEY}`);
+            if (!response.ok) throw new Error(`Finnhub: ${response.status}`);
+            const data = await response.json();
+            console.log(`Finnhub: ${(data || []).length} articles`);
+            return (data || []).slice(0, 8).map(a => ({
+                source: a.source || 'Finnhub',
+                title: a.headline,
+                summary: a.summary || '',
+                url: a.url,
+                timestamp: new Date(a.datetime * 1000).getTime(),
+                time: getTimeAgo(new Date(a.datetime * 1000)),
+                tags: [a.category || 'Market'].filter(Boolean),
+                sentiment: analyzeSentiment(a.headline)
+            }));
+        })(),
 
-        if (!newsData.news || newsData.news.length === 0) {
-            newsFeed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No news available</div>';
-            return;
+        // --- Marketaux ---
+        (async () => {
+            const response = await fetch(`https://api.marketaux.com/v1/news/all?language=en&limit=6&api_token=${MARKETAUX_API_KEY}`);
+            if (!response.ok) throw new Error(`Marketaux: ${response.status}`);
+            const data = await response.json();
+            console.log(`Marketaux: ${(data.data || []).length} articles`);
+            return (data.data || []).map(a => ({
+                source: a.source || 'Marketaux',
+                title: a.title,
+                summary: a.description || '',
+                url: a.url,
+                timestamp: new Date(a.published_at).getTime(),
+                time: getTimeAgo(new Date(a.published_at)),
+                tags: (a.entities || []).slice(0, 3).map(e => e.symbol).filter(Boolean),
+                sentiment: analyzeSentiment(a.title)
+            }));
+        })()
+
+    ]);
+
+    const [alpacaArticles, finnhubArticles, marketauxArticles] = results.map((r, i) => {
+        if (r.status === 'rejected') {
+            console.warn(`News source ${['Alpaca', 'Finnhub', 'Marketaux'][i]} failed:`, r.reason.message);
+            return [];
         }
+        return r.value;
+    });
 
-        let html = '';
-        newsData.news.slice(0, 12).forEach(article => {
-            // Determine sentiment based on headline analysis (basic)
-            const sentiment = analyzeSentiment(article.headline);
-            const sentimentClass = sentiment;
-            const sentimentIcon = sentiment === 'bullish' ? 'fa-arrow-trend-up' :
-                                    sentiment === 'bearish' ? 'fa-arrow-trend-down' :
-                                    'fa-minus';
+    const allArticles = [...alpacaArticles, ...finnhubArticles, ...marketauxArticles]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 20);
 
-            // Calculate time ago
-            const timeAgo = getTimeAgo(new Date(article.created_at));
-
-            // Extract symbols as tags
-            const tags = article.symbols ? article.symbols.slice(0, 3) : [];
-
-            html += `
-                <div class="news-card" onclick="window.open('${article.url}', '_blank')">
-                    <div class="news-source">
-                        <div class="news-source-logo"></div>
-                        <span class="news-source-name">${article.source || 'Market News'}</span>
-                        <span class="news-time">${timeAgo}</span>
-                    </div>
-                    <h4 class="news-title">${article.headline}</h4>
-                    <p class="news-summary">${article.summary || article.content?.substring(0, 150) + '...' || ''}</p>
-                    <div class="news-tags">
-                        <span class="news-sentiment ${sentimentClass}">
-                            <i class="fas ${sentimentIcon}"></i> ${sentiment}
-                        </span>
-                        ${tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-        });
-
-        newsFeed.innerHTML = html;
-    } catch (error) {
-        console.error('Error loading news:', error);
-        // Fallback to sample news if API fails
-        const news = generateSampleNews();
-        let html = '';
-        news.forEach(article => {
-            const sentimentClass = article.sentiment;
-            const sentimentIcon = article.sentiment === 'bullish' ? 'fa-arrow-trend-up' :
-                                    article.sentiment === 'bearish' ? 'fa-arrow-trend-down' :
-                                    'fa-minus';
-
-            html += `
-                <div class="news-card" onclick="window.open('${article.url}', '_blank')">
-                    <div class="news-source">
-                        <div class="news-source-logo"></div>
-                        <span class="news-source-name">${article.source}</span>
-                        <span class="news-time">${article.time}</span>
-                    </div>
-                    <h4 class="news-title">${article.title}</h4>
-                    <p class="news-summary">${article.summary}</p>
-                    <div class="news-tags">
-                        <span class="news-sentiment ${sentimentClass}">
-                            <i class="fas ${sentimentIcon}"></i> ${article.sentiment}
-                        </span>
-                        ${article.tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-        });
-        newsFeed.innerHTML = html;
+    if (allArticles.length === 0) {
+        renderNewsCards(generateSampleNews());
+        return;
     }
+
+    newsCache = allArticles;
+    newsCacheTime = Date.now();
+    renderNewsCards(allArticles);
+}
+
+function renderNewsCards(articles) {
+    const newsFeed = document.getElementById('news-feed');
+    let html = '';
+    articles.forEach(article => {
+        const sentimentClass = article.sentiment;
+        const sentimentIcon = article.sentiment === 'bullish' ? 'fa-arrow-trend-up' :
+                              article.sentiment === 'bearish' ? 'fa-arrow-trend-down' : 'fa-minus';
+        html += `
+            <div class="news-card" onclick="window.open('${article.url}', '_blank')">
+                <div class="news-source">
+                    <div class="news-source-logo"></div>
+                    <span class="news-source-name">${article.source}</span>
+                    <span class="news-time">${article.time}</span>
+                </div>
+                <h4 class="news-title">${article.title}</h4>
+                <p class="news-summary">${article.summary}</p>
+                <div class="news-tags">
+                    <span class="news-sentiment ${sentimentClass}">
+                        <i class="fas ${sentimentIcon}"></i> ${article.sentiment}
+                    </span>
+                    ${article.tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    });
+    newsFeed.innerHTML = html;
 }
 
 function analyzeSentiment(headline) {
@@ -1249,3 +1411,187 @@ window.addEventListener('DOMContentLoaded', () => {
         loadDashboardData();
     }
 });
+// ===== QUANT AI CHAT =====
+let chatSessions = {
+    'chat-session-1': []
+};
+let activeChatId = 'chat-session-1';
+let chatSessionCounter = 1;
+const QUANT_AI_URL = 'https://hdo6lukv03.execute-api.us-east-1.amazonaws.com/prod/quant-ai-chat';
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    autoResize(input);
+    appendUserMessage(message);
+
+    // Hide welcome screen if visible
+    const welcome = document.querySelector('.chat-welcome');
+    if (welcome) welcome.style.display = 'none';
+
+    // Save to session
+    chatSessions[activeChatId].push({ role: 'user', content: message });
+
+    // Update history label with first message
+    const historyItem = document.getElementById(activeChatId);
+    if (historyItem && chatSessions[activeChatId].length === 1) {
+        historyItem.querySelector('span').textContent = message.substring(0, 28) + (message.length > 28 ? '...' : '');
+    }
+
+    // Show typing indicator
+    const typingId = showTypingIndicator();
+    document.getElementById('chat-send-btn').disabled = true;
+
+    try {
+        const response = await fetch(QUANT_AI_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: chatSessions[activeChatId] })
+        });
+
+        removeTypingIndicator(typingId);
+
+        const data = await response.json();
+        const reply = data.reply;
+
+        chatSessions[activeChatId].push({ role: 'assistant', content: reply });
+        appendAssistantMessage(reply);
+
+    } catch (err) {
+        removeTypingIndicator(typingId);
+        appendAssistantMessage('Sorry, I encountered an error. Please check your connection and try again.');
+        console.error('Quant AI error:', err);
+    }
+
+    document.getElementById('chat-send-btn').disabled = false;
+}
+
+function appendUserMessage(text) {
+    const messages = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-message user';
+    div.innerHTML = `
+        <div class="chat-bubble">${escapeHtml(text)}</div>
+        <div class="chat-avatar"><i class="fas fa-user"></i></div>
+    `;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function appendAssistantMessage(text) {
+    const messages = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-message assistant';
+    // Simple markdown-ish: bold, line breaks
+    const formatted = escapeHtml(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    div.innerHTML = `
+        <div class="chat-avatar"><img src="assets/husky_logo.jpg" alt="AI"></div>
+        <div class="chat-bubble">${formatted}</div>
+    `;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const messages = document.getElementById('chat-messages');
+    const id = 'typing-' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'chat-message assistant';
+    div.id = id;
+    div.innerHTML = `
+        <div class="chat-avatar"><img src="assets/husky_logo.jpg" alt="AI"></div>
+        <div class="chat-bubble">
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+    `;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return id;
+}
+
+function removeTypingIndicator(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+}
+
+function handleChatKeydown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+}
+
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+}
+
+function sendSuggestion(text) {
+    document.getElementById('chat-input').value = text;
+    sendMessage();
+}
+
+function startNewChat() {
+    chatSessionCounter++;
+    const id = 'chat-session-' + chatSessionCounter;
+    chatSessions[id] = [];
+
+    const list = document.getElementById('chat-history-list');
+    const item = document.createElement('div');
+    item.className = 'chat-history-item';
+    item.id = id;
+    item.onclick = () => loadChat(id);
+    item.innerHTML = `<i class="fas fa-comment-dots"></i><span>New Conversation</span>`;
+    list.insertBefore(item, list.firstChild);
+
+    loadChat(id);
+}
+
+function loadChat(id) {
+    activeChatId = id;
+
+    // Update active state
+    document.querySelectorAll('.chat-history-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    // Re-render chat
+    const messages = document.getElementById('chat-messages');
+    messages.innerHTML = '';
+
+    if (chatSessions[id].length === 0) {
+        messages.innerHTML = `
+            <div class="chat-welcome">
+                <div class="chat-welcome-logo"><img src="assets/husky_logo.jpg" alt="UConn Quant AI"></div>
+                <h2>Quant AI Assistant</h2>
+                <p>Ask me anything about your portfolio, market trends, trading strategies, or financial analysis.</p>
+                <div class="chat-suggestions">
+                    <button class="suggestion-chip" onclick="sendSuggestion('What is momentum trading and how does it work?')">What is momentum trading?</button>
+                    <button class="suggestion-chip" onclick="sendSuggestion('Analyze the current market conditions and key risks to watch.')">Analyze market conditions</button>
+                    <button class="suggestion-chip" onclick="sendSuggestion('Explain sector rotation strategy in simple terms.')">Explain sector rotation</button>
+                    <button class="suggestion-chip" onclick="sendSuggestion('What are the best risk management techniques for an algorithmic portfolio?')">Risk management tips</button>
+                </div>
+            </div>`;
+    } else {
+        chatSessions[id].forEach(msg => {
+            if (msg.role === 'user') appendUserMessage(msg.content);
+            else appendAssistantMessage(msg.content);
+        });
+    }
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
