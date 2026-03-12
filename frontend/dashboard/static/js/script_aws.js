@@ -192,8 +192,16 @@ async function loadDashboardData() {
       return;
     }
 
+    // Fetch 1W and 1M history in parallel for accurate Performance Overview
+    const apiKey2 = sessionStorage.getItem('alpaca_key');
+    const apiSecret2 = sessionStorage.getItem('alpaca_secret');
+    const [weekHistory, monthHistory] = await Promise.all([
+        fetch(`https://paper-api.alpaca.markets/v2/account/portfolio/history?timeframe=1D&period=1W`, { headers: { 'APCA-API-KEY-ID': apiKey2, 'APCA-API-SECRET-KEY': apiSecret2 } }).then(r => r.json()).catch(() => null),
+        fetch(`https://paper-api.alpaca.markets/v2/account/portfolio/history?timeframe=1D&period=1M`, { headers: { 'APCA-API-KEY-ID': apiKey2, 'APCA-API-SECRET-KEY': apiSecret2 } }).then(r => r.json()).catch(() => null),
+    ]);
+
     // Render results
-    populateDashboard(account, positions);
+    populateDashboard(account, positions, weekHistory, monthHistory);
     populatePositionsTable(positions);
     allPositions = positions;
     allSectors = await groupBySector(positions);
@@ -208,7 +216,7 @@ async function loadDashboardData() {
 }
 
 // ===== DASHBOARD =====
-function populateDashboard(account, positions) {
+function populateDashboard(account, positions, weekHistory, monthHistory) {
     const portfolioValue = parseFloat(account.portfolio_value);
     const initialCapital = 100000;
     const totalReturn = ((portfolioValue - initialCapital) / initialCapital) * 100;
@@ -269,18 +277,37 @@ function populateDashboard(account, positions) {
     document.getElementById('dashboard-metrics').innerHTML = metricsHTML;
 
     // Performance stats
+    // Performance stats — calculated from real Alpaca history
+    function calcChange(history, currentValue) {
+        if (!history || !history.equity || history.equity.length < 2) return null;
+        const startValue = history.equity.find(v => v > 0);
+        if (!startValue) return null;
+        const dollar = currentValue - startValue;
+        const pct = (dollar / startValue) * 100;
+        return { dollar, pct };
+    }
+
+    const weekChange = calcChange(weekHistory, portfolioValue);
+    const monthChange = calcChange(monthHistory, portfolioValue);
+
+    function renderChange(change, label) {
+        if (!change) return `
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">${label}</p>
+            <p style="font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--text-secondary);">N/A</p>
+            <p style="font-size: 14px; color: var(--text-secondary);">No data available</p>`;
+        const color = change.dollar >= 0 ? 'var(--positive)' : 'var(--negative)';
+        const arrow = change.dollar >= 0 ? 'up' : 'down';
+        const sign = change.dollar >= 0 ? '+' : '';
+        return `
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">${label}</p>
+            <p style="font-size: 28px; font-weight: 700; margin-bottom: 4px; color: ${color};">${sign}$${Math.abs(change.dollar).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+            <p style="font-size: 14px; color: ${color};"><i class="fas fa-arrow-${arrow}"></i> ${sign}${change.pct.toFixed(2)}%</p>`;
+    }
+
     const statsHTML = `
         <div style="padding: 20px;">
-            <div style="margin-bottom: 24px;">
-                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Weekly Change</p>
-                <p style="font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--positive);">+$3,247.50</p>
-                <p style="font-size: 14px; color: var(--positive);"><i class="fas fa-arrow-up"></i> +3.35%</p>
-            </div>
-            <div style="margin-bottom: 24px;">
-                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Monthly Change</p>
-                <p style="font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--positive);">+$2,547.89</p>
-                <p style="font-size: 14px; color: var(--positive);"><i class="fas fa-arrow-up"></i> +2.61%</p>
-            </div>
+            <div style="margin-bottom: 24px;">${renderChange(weekChange, 'Weekly Change')}</div>
+            <div style="margin-bottom: 24px;">${renderChange(monthChange, 'Monthly Change')}</div>
             <div>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">All Time</p>
                 <p style="font-size: 28px; font-weight: 700; margin-bottom: 4px; color: ${dollarGain >= 0 ? 'var(--positive)' : 'var(--negative)'};">${dollarGain >= 0 ? '+' : ''}$${Math.abs(dollarGain).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
@@ -378,58 +405,261 @@ function getCompanyName(symbol) {
     return names[symbol] || symbol;
 }
 
-// ===== SECTORS =====
+// ===== SECTORS ======
 
-/*
-function groupBySector(positions) {
+// Full S&P 500 sector map (GICS classifications)
+const SP500_SECTOR_MAP = {
+    // ── Technology ──────────────────────────────────────────────────────────
+    'AAPL': 'Technology', 'MSFT': 'Technology', 'NVDA': 'Technology',
+    'AVGO': 'Technology', 'AMD': 'Technology', 'ORCL': 'Technology',
+    'CRM': 'Technology', 'ACN': 'Technology', 'CSCO': 'Technology',
+    'IBM': 'Technology', 'ADBE': 'Technology', 'INTU': 'Technology',
+    'NOW': 'Technology', 'QCOM': 'Technology', 'TXN': 'Technology',
+    'AMAT': 'Technology', 'LRCX': 'Technology', 'KLAC': 'Technology',
+    'MU': 'Technology', 'INTC': 'Technology', 'ADI': 'Technology',
+    'MCHP': 'Technology', 'NXPI': 'Technology', 'SWKS': 'Technology',
+    'MPWR': 'Technology', 'MRVL': 'Technology', 'ON': 'Technology',
+    'TER': 'Technology', 'KEYS': 'Technology', 'ENPH': 'Technology',
+    'FTNT': 'Technology', 'PANW': 'Technology', 'CRWD': 'Technology',
+    'SNPS': 'Technology', 'CDNS': 'Technology', 'ANSS': 'Technology',
+    'PTC': 'Technology', 'EPAM': 'Technology', 'CTSH': 'Technology',
+    'IT': 'Technology', 'GLW': 'Technology', 'APH': 'Technology',
+    'TEL': 'Technology', 'JBL': 'Technology', 'STX': 'Technology',
+    'WDC': 'Technology', 'NTAP': 'Technology', 'HPQ': 'Technology',
+    'HPE': 'Technology', 'DELL': 'Technology', 'SMCI': 'Technology',
+    'PLTR': 'Technology', 'APP': 'Technology', 'NET': 'Technology',
+    'DDOG': 'Technology', 'SNOW': 'Technology', 'ZS': 'Technology',
+    'OKTA': 'Technology', 'TEAM': 'Technology', 'HUBS': 'Technology',
+    'WDAY': 'Technology', 'VEEV': 'Technology', 'ARM': 'Technology',
+    'ANET': 'Technology', 'NTNX': 'Technology', 'PSTG': 'Technology',
+
+    // ── Communication Services ───────────────────────────────────────────────
+    'GOOGL': 'Communication Services', 'GOOG': 'Communication Services',
+    'META': 'Communication Services', 'NFLX': 'Communication Services',
+    'DIS': 'Communication Services', 'CMCSA': 'Communication Services',
+    'TMUS': 'Communication Services', 'VZ': 'Communication Services',
+    'T': 'Communication Services', 'CHTR': 'Communication Services',
+    'TTWO': 'Communication Services', 'EA': 'Communication Services',
+    'RBLX': 'Communication Services', 'MTCH': 'Communication Services',
+    'WBD': 'Communication Services', 'PARA': 'Communication Services',
+    'FOX': 'Communication Services', 'FOXA': 'Communication Services',
+    'NWS': 'Communication Services', 'NWSA': 'Communication Services',
+    'OMC': 'Communication Services', 'IPG': 'Communication Services',
+    'SNAP': 'Communication Services', 'PINS': 'Communication Services',
+    'RDDT': 'Communication Services', 'SPOT': 'Communication Services',
+    'TTD': 'Communication Services', 'LYV': 'Communication Services',
+
+    // ── Financials ──────────────────────────────────────────────────────────
+    'BRK.B': 'Financials', 'JPM': 'Financials', 'BAC': 'Financials',
+    'WFC': 'Financials', 'GS': 'Financials', 'MS': 'Financials',
+    'C': 'Financials', 'AXP': 'Financials', 'BLK': 'Financials',
+    'SCHW': 'Financials', 'USB': 'Financials', 'PNC': 'Financials',
+    'TFC': 'Financials', 'COF': 'Financials', 'DFS': 'Financials',
+    'SYF': 'Financials', 'AIG': 'Financials', 'MET': 'Financials',
+    'PRU': 'Financials', 'AFL': 'Financials', 'ALL': 'Financials',
+    'PGR': 'Financials', 'TRV': 'Financials', 'CB': 'Financials',
+    'HIG': 'Financials', 'MMC': 'Financials', 'AON': 'Financials',
+    'WTW': 'Financials', 'BX': 'Financials', 'KKR': 'Financials',
+    'APO': 'Financials', 'CG': 'Financials', 'ARES': 'Financials',
+    'BK': 'Financials', 'STT': 'Financials', 'NTRS': 'Financials',
+    'FDS': 'Financials', 'MSCI': 'Financials', 'SPGI': 'Financials',
+    'MCO': 'Financials', 'ICE': 'Financials', 'CME': 'Financials',
+    'CBOE': 'Financials', 'NDAQ': 'Financials', 'FIS': 'Financials',
+    'FISV': 'Financials', 'GPN': 'Financials', 'PYPL': 'Financials',
+    'V': 'Financials', 'MA': 'Financials', 'IBKR': 'Financials',
+    'HOOD': 'Financials', 'COIN': 'Financials', 'SOFI': 'Financials',
+    'AFRM': 'Financials', 'LC': 'Financials', 'CFG': 'Financials',
+    'FITB': 'Financials', 'KEY': 'Financials', 'RF': 'Financials',
+    'HBAN': 'Financials', 'MTB': 'Financials', 'ZION': 'Financials',
+    'CMA': 'Financials', 'WAL': 'Financials', 'FHN': 'Financials',
+
+    // ── Health Care ─────────────────────────────────────────────────────────
+    'LLY': 'Health Care', 'UNH': 'Health Care', 'JNJ': 'Health Care',
+    'ABBV': 'Health Care', 'MRK': 'Health Care', 'TMO': 'Health Care',
+    'ABT': 'Health Care', 'DHR': 'Health Care', 'PFE': 'Health Care',
+    'AMGN': 'Health Care', 'BMY': 'Health Care', 'GILD': 'Health Care',
+    'VRTX': 'Health Care', 'REGN': 'Health Care', 'BIIB': 'Health Care',
+    'MRNA': 'Health Care', 'ILMN': 'Health Care', 'IDXX': 'Health Care',
+    'IQV': 'Health Care', 'CRL': 'Health Care', 'IQVIA': 'Health Care',
+    'SYK': 'Health Care', 'BSX': 'Health Care', 'MDT': 'Health Care',
+    'EW': 'Health Care', 'ISRG': 'Health Care', 'ZBH': 'Health Care',
+    'BDX': 'Health Care', 'BAX': 'Health Care', 'PODD': 'Health Care',
+    'DXCM': 'Health Care', 'HOLX': 'Health Care', 'ALGN': 'Health Care',
+    'RMD': 'Health Care', 'GEHC': 'Health Care', 'HSIC': 'Health Care',
+    'MCK': 'Health Care', 'CAH': 'Health Care', 'CVS': 'Health Care',
+    'CI': 'Health Care', 'HUM': 'Health Care', 'CNC': 'Health Care',
+    'MOH': 'Health Care', 'ELV': 'Health Care', 'HCA': 'Health Care',
+    'UHS': 'Health Care', 'THC': 'Health Care', 'WAT': 'Health Care',
+    'A': 'Health Care', 'MTD': 'Health Care', 'RVTY': 'Health Care',
+    'NBIX': 'Health Care', 'EXAS': 'Health Care', 'INCY': 'Health Care',
+
+    // ── Consumer Discretionary ──────────────────────────────────────────────
+    'AMZN': 'Consumer Discretionary', 'TSLA': 'Consumer Discretionary',
+    'HD': 'Consumer Discretionary', 'LOW': 'Consumer Discretionary',
+    'TJX': 'Consumer Discretionary', 'BURL': 'Consumer Discretionary',
+    'ROST': 'Consumer Discretionary', 'ULTA': 'Consumer Discretionary',
+    'MCD': 'Consumer Discretionary', 'SBUX': 'Consumer Discretionary',
+    'CMG': 'Consumer Discretionary', 'YUM': 'Consumer Discretionary',
+    'DPZ': 'Consumer Discretionary', 'DRI': 'Consumer Discretionary',
+    'EAT': 'Consumer Discretionary', 'TXRH': 'Consumer Discretionary',
+    'NKE': 'Consumer Discretionary', 'LULU': 'Consumer Discretionary',
+    'PVH': 'Consumer Discretionary', 'RL': 'Consumer Discretionary',
+    'TPR': 'Consumer Discretionary', 'VFC': 'Consumer Discretionary',
+    'HBI': 'Consumer Discretionary', 'DECK': 'Consumer Discretionary',
+    'SKX': 'Consumer Discretionary', 'UAA': 'Consumer Discretionary',
+    'GM': 'Consumer Discretionary', 'F': 'Consumer Discretionary',
+    'TSCO': 'Consumer Discretionary', 'AZO': 'Consumer Discretionary',
+    'ORLY': 'Consumer Discretionary', 'AAP': 'Consumer Discretionary',
+    'BBY': 'Consumer Discretionary', 'W': 'Consumer Discretionary',
+    'RCL': 'Consumer Discretionary', 'CCL': 'Consumer Discretionary',
+    'NCLH': 'Consumer Discretionary', 'MAR': 'Consumer Discretionary',
+    'HLT': 'Consumer Discretionary', 'H': 'Consumer Discretionary',
+    'MGM': 'Consumer Discretionary', 'WYNN': 'Consumer Discretionary',
+    'LVS': 'Consumer Discretionary', 'CZR': 'Consumer Discretionary',
+    'DASH': 'Consumer Discretionary', 'UBER': 'Consumer Discretionary',
+    'LYFT': 'Consumer Discretionary', 'ABNB': 'Consumer Discretionary',
+    'BKNG': 'Consumer Discretionary', 'EXPE': 'Consumer Discretionary',
+    'TRIP': 'Consumer Discretionary', 'UAL': 'Consumer Discretionary',
+    'DAL': 'Consumer Discretionary', 'LUV': 'Consumer Discretionary',
+    'AAL': 'Consumer Discretionary', 'ALK': 'Consumer Discretionary',
+    'APTV': 'Consumer Discretionary', 'NVR': 'Consumer Discretionary',
+    'PHM': 'Consumer Discretionary', 'DHI': 'Consumer Discretionary',
+    'LEN': 'Consumer Discretionary', 'TOL': 'Consumer Discretionary',
+    'EL': 'Consumer Discretionary', 'RIVN': 'Consumer Discretionary',
+    'LCID': 'Consumer Discretionary',
+
+    // ── Consumer Staples ────────────────────────────────────────────────────
+    'WMT': 'Consumer Staples', 'COST': 'Consumer Staples',
+    'PG': 'Consumer Staples', 'KO': 'Consumer Staples',
+    'PEP': 'Consumer Staples', 'PM': 'Consumer Staples',
+    'MO': 'Consumer Staples', 'BTI': 'Consumer Staples',
+    'MDLZ': 'Consumer Staples', 'GIS': 'Consumer Staples',
+    'K': 'Consumer Staples', 'CPB': 'Consumer Staples',
+    'HRL': 'Consumer Staples', 'CAG': 'Consumer Staples',
+    'SJM': 'Consumer Staples', 'MKC': 'Consumer Staples',
+    'CL': 'Consumer Staples', 'CHD': 'Consumer Staples',
+    'CLX': 'Consumer Staples', 'KMB': 'Consumer Staples',
+    'EL': 'Consumer Staples', 'KVUE': 'Consumer Staples',
+    'DLTR': 'Consumer Staples', 'DG': 'Consumer Staples',
+    'KR': 'Consumer Staples', 'SYY': 'Consumer Staples',
+    'BJ': 'Consumer Staples', 'MNST': 'Consumer Staples',
+    'STZ': 'Consumer Staples', 'TAP': 'Consumer Staples',
+    'BUD': 'Consumer Staples',
+
+    // ── Industrials ─────────────────────────────────────────────────────────
+    'GE': 'Industrials', 'GEV': 'Industrials', 'HON': 'Industrials',
+    'MMM': 'Industrials', 'RTX': 'Industrials', 'LMT': 'Industrials',
+    'NOC': 'Industrials', 'GD': 'Industrials', 'BA': 'Industrials',
+    'TDG': 'Industrials', 'HEI': 'Industrials', 'TXT': 'Industrials',
+    'HWM': 'Industrials', 'SPR': 'Industrials', 'AXON': 'Industrials',
+    'CAT': 'Industrials', 'DE': 'Industrials', 'PCAR': 'Industrials',
+    'CMI': 'Industrials', 'PH': 'Industrials', 'EMR': 'Industrials',
+    'ETN': 'Industrials', 'ROK': 'Industrials', 'AME': 'Industrials',
+    'GWW': 'Industrials', 'FAST': 'Industrials', 'MSC': 'Industrials',
+    'TT': 'Industrials', 'CARR': 'Industrials', 'OTIS': 'Industrials',
+    'JCI': 'Industrials', 'IR': 'Industrials', 'XYL': 'Industrials',
+    'XYLD': 'Industrials', 'VLTO': 'Industrials', 'ROP': 'Industrials',
+    'ILMN': 'Industrials', 'FDX': 'Industrials', 'UPS': 'Industrials',
+    'XPO': 'Industrials', 'SAIA': 'Industrials', 'ODFL': 'Industrials',
+    'JBHT': 'Industrials', 'CHRW': 'Industrials', 'EXPD': 'Industrials',
+    'URI': 'Industrials', 'RSG': 'Industrials', 'WM': 'Industrials',
+    'CTAS': 'Industrials', 'CPRT': 'Industrials', 'VRSK': 'Industrials',
+    'HII': 'Industrials', 'LHX': 'Industrials', 'LDOS': 'Industrials',
+    'SAIC': 'Industrials', 'BAH': 'Industrials', 'ALLE': 'Industrials',
+    'RRX': 'Industrials', 'EME': 'Industrials', 'J': 'Industrials',
+    'PWR': 'Industrials', 'MAS': 'Industrials', 'SWK': 'Industrials',
+
+    // ── Energy ──────────────────────────────────────────────────────────────
+    'XOM': 'Energy', 'CVX': 'Energy', 'COP': 'Energy',
+    'EOG': 'Energy', 'SLB': 'Energy', 'HAL': 'Energy',
+    'BKR': 'Energy', 'PSX': 'Energy', 'VLO': 'Energy',
+    'MPC': 'Energy', 'PBF': 'Energy', 'DVN': 'Energy',
+    'FANG': 'Energy', 'OXY': 'Energy', 'HES': 'Energy',
+    'APA': 'Energy', 'MRO': 'Energy', 'EQT': 'Energy',
+    'AR': 'Energy', 'CTRA': 'Energy', 'RRC': 'Energy',
+    'KMI': 'Energy', 'WMB': 'Energy', 'OKE': 'Energy',
+    'TRGP': 'Energy', 'ET': 'Energy', 'EPD': 'Energy',
+    'LNG': 'Energy', 'CQP': 'Energy',
+
+    // ── Utilities ───────────────────────────────────────────────────────────
+    'NEE': 'Utilities', 'DUK': 'Utilities', 'SO': 'Utilities',
+    'AEP': 'Utilities', 'EXC': 'Utilities', 'PCG': 'Utilities',
+    'XEL': 'Utilities', 'ED': 'Utilities', 'WEC': 'Utilities',
+    'ETR': 'Utilities', 'FE': 'Utilities', 'PPL': 'Utilities',
+    'CMS': 'Utilities', 'NI': 'Utilities', 'ATO': 'Utilities',
+    'LNT': 'Utilities', 'EVRG': 'Utilities', 'PNW': 'Utilities',
+    'VST': 'Utilities', 'NRG': 'Utilities', 'CEG': 'Utilities',
+    'FSLR': 'Utilities', 'AES': 'Utilities', 'AWK': 'Utilities',
+    'SRE': 'Utilities', 'D': 'Utilities', 'EIX': 'Utilities',
+    'ES': 'Utilities', 'CNP': 'Utilities',
+
+    // ── Materials ───────────────────────────────────────────────────────────
+    'LIN': 'Materials', 'APD': 'Materials', 'SHW': 'Materials',
+    'ECL': 'Materials', 'PPG': 'Materials', 'EMN': 'Materials',
+    'DD': 'Materials', 'DOW': 'Materials', 'LYB': 'Materials',
+    'CE': 'Materials', 'HUN': 'Materials', 'RPM': 'Materials',
+    'IFF': 'Materials', 'ALB': 'Materials', 'FCX': 'Materials',
+    'NEM': 'Materials', 'GOLD': 'Materials', 'AA': 'Materials',
+    'X': 'Materials', 'NUE': 'Materials', 'STLD': 'Materials',
+    'RS': 'Materials', 'VMC': 'Materials', 'MLM': 'Materials',
+    'PKG': 'Materials', 'IP': 'Materials', 'WRK': 'Materials',
+    'CF': 'Materials', 'MOS': 'Materials', 'CTVA': 'Materials',
+    'FMC': 'Materials', 'GLD': 'Materials', 'AMCR': 'Materials',
+    'MP': 'Materials', 'BALL': 'Materials', 'SON': 'Materials',
+    'ANET': 'Materials', 'VLTO': 'Materials',
+
+    // ── Real Estate ─────────────────────────────────────────────────────────
+    'PLD': 'Real Estate', 'AMT': 'Real Estate', 'CCI': 'Real Estate',
+    'EQIX': 'Real Estate', 'DLR': 'Real Estate', 'SPG': 'Real Estate',
+    'O': 'Real Estate', 'PSA': 'Real Estate', 'EQR': 'Real Estate',
+    'AVB': 'Real Estate', 'VTR': 'Real Estate', 'VICI': 'Real Estate',
+    'WY': 'Real Estate', 'ARE': 'Real Estate', 'BXP': 'Real Estate',
+    'KIM': 'Real Estate', 'REG': 'Real Estate', 'FRT': 'Real Estate',
+    'NNN': 'Real Estate', 'WELL': 'Real Estate', 'CBRE': 'Real Estate',
+    'CSGP': 'Real Estate', 'SBAC': 'Real Estate', 'IRM': 'Real Estate',
+    'ESS': 'Real Estate', 'UDR': 'Real Estate', 'CPT': 'Real Estate',
+    'MAA': 'Real Estate', 'AIV': 'Real Estate', 'NLY': 'Real Estate',
+};
+
+// Group positions by sector using the S&P 500 map, falling back to Finnhub for unknowns
+async function groupBySector(positions) {
     const sectors = {};
-    const sectorMap = {
-        'Technology': ['PLTR', 'APP', 'AVGO', 'JBL', 'APH', 'GLW'],
-        'Financials': ['HOOD', 'IBKR', 'C', 'COIN', 'SCHW', 'GS'],
-        'Utilities': ['VST', 'NRG', 'CEG'],
-        'Consumer Discretionary': ['TPR', 'RCL', 'DASH', 'CCL', 'LYV'],
-        'Industrials': ['GEV', 'UAL', 'AXON', 'HWM', 'GE', 'JCI', 'EME'],
-        'Communication Services': ['NFLX'],
-        'Energy': ['EQT', 'BKR'],
-        'Health Care': ['GILD', 'MCK', 'CAH', 'PODD', 'CVS'],
-        'Consumer Staples': ['MO', 'DLTR', 'PM'],
-        'Real Estate': ['WELL', 'CBRE', 'CSGP'],
-        'Materials': ['CTVA', 'NEM', 'MOS']
-    };
+    const uncached = [];
+
+    // Load any previously Finnhub-fetched overrides from localStorage
+    let localCache = {};
+    try { localCache = JSON.parse(localStorage.getItem('sector_cache') || '{}'); } catch {}
 
     positions.forEach(pos => {
-        let sectorName = 'Other';
-        for (const [sector, symbols] of Object.entries(sectorMap)) {
-            if (symbols.includes(pos.symbol)) {
-                sectorName = sector;
-                break;
-            }
+        // Priority: localStorage override → S&P 500 map → needs Finnhub lookup
+        const sector = localCache[pos.symbol] || SP500_SECTOR_MAP[pos.symbol];
+        if (sector) {
+            if (!sectors[sector]) sectors[sector] = [];
+            sectors[sector].push(pos);
+        } else {
+            uncached.push(pos);
         }
-
-        if (!sectors[sectorName]) {
-            sectors[sectorName] = [];
-        }
-        sectors[sectorName].push(pos);
     });
 
+    // For anything not in the map, try Finnhub as a last resort
+    if (uncached.length > 0) {
+        console.log(`${uncached.length} tickers not in S&P 500 map, fetching from Finnhub...`);
+        const results = await Promise.all(
+            uncached.map((pos, i) => fetchSectorFromFinnhub(pos.symbol, i * 200))
+        );
+        uncached.forEach((pos, i) => {
+            const sectorName = results[i] || 'Other';
+            localCache[pos.symbol] = sectorName;
+            if (!sectors[sectorName]) sectors[sectorName] = [];
+            sectors[sectorName].push(pos);
+        });
+        localStorage.setItem('sector_cache', JSON.stringify(localCache));
+    }
+
     return sectors;
-} */
-
-// ===== SECTORS =====
-
-// Load sector cache from localStorage
-function loadSectorCache() {
-    try {
-        return JSON.parse(localStorage.getItem('sector_cache') || '{}');
-    } catch { return {}; }
 }
 
-// Save sector cache to localStorage
-function saveSectorCache(cache) {
-    localStorage.setItem('sector_cache', JSON.stringify(cache));
-}
-
-// Look up a single ticker's sector from Finnhub
+// Finnhub fallback for tickers not in the S&P 500 map
 async function fetchSectorFromFinnhub(symbol, delayMs = 0) {
     if (delayMs > 0) await new Promise(r => setTimeout(r, delayMs));
     try {
@@ -438,57 +668,20 @@ async function fetchSectorFromFinnhub(symbol, delayMs = 0) {
         );
         if (!response.ok) return 'Other';
         const data = await response.json();
-        return mapFinnhubIndustryToSector(data.finnhubIndustry || '');
-    } catch {
+        const i = (data.finnhubIndustry || '').toLowerCase();
+        if (i.includes('technology') || i.includes('semiconductor') || i.includes('software') || i.includes('hardware') || i.includes('electronic')) return 'Technology';
+        if (i.includes('financial') || i.includes('bank') || i.includes('insurance') || i.includes('asset management') || i.includes('capital markets')) return 'Financials';
+        if (i.includes('health') || i.includes('pharma') || i.includes('biotech') || i.includes('medical')) return 'Health Care';
+        if (i.includes('communication') || i.includes('media') || i.includes('entertainment') || i.includes('telecom')) return 'Communication Services';
+        if (i.includes('consumer discretionary') || i.includes('retail') || i.includes('restaurant') || i.includes('airline') || i.includes('travel')) return 'Consumer Discretionary';
+        if (i.includes('consumer staples') || i.includes('food') || i.includes('beverage') || i.includes('tobacco')) return 'Consumer Staples';
+        if (i.includes('industrial') || i.includes('aerospace') || i.includes('defense') || i.includes('machinery') || i.includes('transportation')) return 'Industrials';
+        if (i.includes('energy') || i.includes('oil') || i.includes('gas') || i.includes('petroleum')) return 'Energy';
+        if (i.includes('utilities') || i.includes('electric') || i.includes('water')) return 'Utilities';
+        if (i.includes('real estate') || i.includes('reit') || i.includes('property')) return 'Real Estate';
+        if (i.includes('material') || i.includes('chemical') || i.includes('mining') || i.includes('metal') || i.includes('gold')) return 'Materials';
         return 'Other';
-    }
-}
-
-// Map Finnhub industry strings to standard GICS sector names
-function mapFinnhubIndustryToSector(industry) {
-    if (!industry) return 'Other';
-    const i = industry.toLowerCase();
-    if (i.includes('technology') || i.includes('semiconductor') || i.includes('software') || i.includes('hardware') || i.includes('electronic')) return 'Technology';
-    if (i.includes('financial') || i.includes('bank') || i.includes('insurance') || i.includes('asset management') || i.includes('capital markets') || i.includes('diversified financial') || i.includes('mortgage') || i.includes('thrift')) return 'Financials';
-    if (i.includes('health') || i.includes('pharma') || i.includes('biotech') || i.includes('medical') || i.includes('drug') || i.includes('life science')) return 'Health Care';
-    if (i.includes('communication') || i.includes('media') || i.includes('entertainment') || i.includes('broadcasting') || i.includes('publishing') || i.includes('telecom') || i.includes('wireless')) return 'Communication Services';
-    if (i.includes('consumer discretionary') || i.includes('retail') || i.includes('apparel') || i.includes('automobile') || i.includes('hotel') || i.includes('restaurant') || i.includes('leisure') || i.includes('luxury') || i.includes('travel') || i.includes('airline')) return 'Consumer Discretionary';
-    if (i.includes('consumer staples') || i.includes('food') || i.includes('beverage') || i.includes('household') || i.includes('personal product') || i.includes('tobacco') || i.includes('grocery')) return 'Consumer Staples';
-    if (i.includes('industrial') || i.includes('aerospace') || i.includes('defense') || i.includes('machinery') || i.includes('construction') || i.includes('transportation') || i.includes('logistics')) return 'Industrials';
-    if (i.includes('energy') || i.includes('oil') || i.includes('gas') || i.includes('coal') || i.includes('petroleum')) return 'Energy';
-    if (i.includes('utilities') || i.includes('electric') || i.includes('water') || i.includes('gas utility')) return 'Utilities';
-    if (i.includes('real estate') || i.includes('reit') || i.includes('property')) return 'Real Estate';
-    if (i.includes('material') || i.includes('chemical') || i.includes('mining') || i.includes('metal') || i.includes('gold') || i.includes('steel') || i.includes('paper') || i.includes('forest')) return 'Materials';
-    return 'Other';
-}
-
-// Main sector grouping — uses cache first, fetches Finnhub for unknowns
-async function groupBySector(positions) {
-    const cache = loadSectorCache();
-
-    // Find tickers not yet in cache
-    const uncached = positions.filter(p => !cache[p.symbol]);
-
-    if (uncached.length > 0) {
-        console.log(`Fetching sectors for ${uncached.length} uncached tickers...`);
-        // Space calls 200ms apart to stay within Finnhub free tier (60 req/min)
-        const results = await Promise.all(
-            uncached.map((pos, i) => fetchSectorFromFinnhub(pos.symbol, i * 200))
-        );
-        uncached.forEach((pos, i) => { cache[pos.symbol] = results[i]; });
-        saveSectorCache(cache);
-        console.log('Sector cache updated.');
-    }
-
-    // Group all positions using cache
-    const sectors = {};
-    positions.forEach(pos => {
-        const sectorName = cache[pos.symbol] || 'Other';
-        if (!sectors[sectorName]) sectors[sectorName] = [];
-        sectors[sectorName].push(pos);
-    });
-
-    return sectors;
+    } catch { return 'Other'; }
 }
 
 function populateSectorsList(sectors) {
@@ -1325,6 +1518,8 @@ function generateSampleNews() {
 }
 
 function refreshNews() {
+    newsCache = null;
+    newsCacheTime = null;
     loadNewsFeed();
 }
 
