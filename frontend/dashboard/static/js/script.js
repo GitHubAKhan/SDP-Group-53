@@ -732,7 +732,7 @@ function populateSectorsList(sectors) {
                     </div>
                 </div>
                 <div class="sector-bar">
-                    <div class="sector-bar-fill" style="width: ${sector.allocation}%"></div>
+                    <div class="sector-bar-fill" style="width: ${Math.abs(sector.allocation)}%; background: ${sector.allocation < 0 ? 'var(--negative, #ef4444)' : ''}"></div>
                 </div>
                 <div class="sector-holdings-dropdown" id="sector-dropdown-${index}">
                     ${sector.holdings.map(pos => {
