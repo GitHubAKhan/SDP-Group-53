@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/var/task/lambda_handler.py", line 125, in handler
+    results = run_monthly_rebalance(dry_run=dry_run)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/task/execution/scheduler.py", line 215, in run_monthly_rebalance
+    universe_mgr = UniverseManager(pipeline.data_dir)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/task/data/universe.py", line 49, in __init__
+    self._load()
+  File "/var/task/data/universe.py", line 54, in _load
+    raise FileNotFoundError(
+FileNotFoundError: Constituent file not found: /tmp/sdp/data/constituents_long.csv
+Run 12_1trade_datascraper.py with Bloomberg to generate it.

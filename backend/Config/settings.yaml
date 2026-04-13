@@ -1,0 +1,83 @@
+# ============================================================
+# Risk-Managed Momentum Long/Short Strategy Configuration
+# ============================================================
+# All strategy parameters centralized here. Nothing hardcoded.
+# Change values here for sensitivity analysis.
+
+strategy:
+  formation_period: 252       # 12 months lookback (trading days)
+  skip_period: 21             # 1 month skip to avoid reversal
+  long_pct: 0.20              # Top 20% quintile for longs
+  short_pct: 0.20             # Bottom 20% quintile for shorts
+  rebalance_freq: monthly     # Monthly rebalance
+  top_pct_per_sector: 0.10    # Top 10% by 12-1 momentum within each sector
+  use_industry_neutral: false # If true, rank within GICS industries instead of cross-sectional
+
+risk:
+  vol_target: 0.12            # Target 12% annualized vol (Barroso & Santa-Clara 2015)
+  vol_lookback: 126           # 6-month trailing realized vol
+  vol_scale_min: 0.25         # Min scaling factor
+  vol_scale_max: 2.0          # Max scaling factor (cap leverage)
+  sector_cap: 0.30            # Max 30% of either leg in one GICS sector
+  max_single_name: 0.05       # 5% max per stock
+  drawdown_breaker: -0.15     # -15% trailing 30d DD -> reduce to 50% vol target
+  liquidity_min_adv: 5000000  # Min $5M avg daily volume (trailing 20 days)
+  turnover_flag: 0.40         # Flag if monthly turnover > 40% of gross
+
+  # Drawdown control thresholds
+  dd_threshold_1: 0.10        # Reduce to 75% at -10% DD
+  dd_threshold_2: 0.15        # Reduce to 50% at -15% DD
+  dd_threshold_3: 0.25        # Exit at -25% DD
+
+  # Trend filter
+  use_trend_filter: true
+  trend_ma_window: 200        # 200-day MA for SPY
+  trend_ticker: "SPY US Equity"
+
+macro_regime:
+  enabled: true
+  # RISK-OFF if any TWO of these conditions are true
+  vix_threshold: 25           # VIX > 25 = elevated fear
+  yield_curve_threshold: 0    # T10Y2Y < 0 = inverted
+  credit_spread_threshold: 3.0  # BAA10Y > 3.0% = stress
+  vol_ratio_threshold: 1.5    # Portfolio 21d vol > 1.5x its 252d avg
+  risk_off_vol_target: 0.06   # When RISK-OFF, halve vol target to 6%
+
+gold:
+  enabled: true
+  ticker: "GLD"               # SPDR Gold Shares ETF
+  allocation_pct: 0.05        # 5% of total NAV
+  rebalance_threshold: 0.02   # Rebalance if drifts >2% from target
+  alt_ticker: "IAU"           # Backup: iShares Gold Trust
+
+backtest:
+  start_date: "2010-01-01"    # Design period start
+  end_date: "2019-12-31"      # Design period end
+  oos_start: "2020-01-01"     # Out-of-sample start
+  oos_end: "2025-12-31"       # Out-of-sample end
+  initial_capital: 1000000    # $1M starting capital
+  commission_bps: 10          # 10 bps per $ traded (one-way)
+  slippage_bps: 5             # 5 bps slippage assumption
+
+execution:
+  broker: alpaca
+  paper_trading: true         # Start with paper trading
+  base_url_paper: "https://paper-api.alpaca.markets"
+  base_url_live: "https://api.alpaca.markets"
+  rate_limit_per_min: 200     # Alpaca rate limit
+  order_type: market          # Market orders for rebalance
+  time_in_force: day
+
+data:
+  bloomberg_host: localhost
+  bloomberg_port: 8194
+  universe_index: "SPX Index"
+  data_dir: "data/data"
+  cache_dir: "data/cache"
+  fred_series:
+    vix: "VIXCLS"
+    yield_curve: "T10Y2Y"
+    credit_spread: "BAA10Y"
+    fed_rate: "FEDFUNDS"
+    initial_claims: "ICSA"
+    pmi: "MANEMP"

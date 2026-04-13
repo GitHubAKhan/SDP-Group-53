@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/var/task/lambda_handler.py", line 125, in handler
+    results = run_monthly_rebalance(dry_run=dry_run)
+  File "/var/task/execution/scheduler.py", line 157, in run_monthly_rebalance
+    from data.data_pipeline import DataPipeline
+  File "/var/task/data/data_pipeline.py", line 20, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'

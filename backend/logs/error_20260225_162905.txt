@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/var/task/lambda_handler.py", line 125, in handler
+    results = run_monthly_rebalance(dry_run=dry_run)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/task/execution/scheduler.py", line 193, in run_monthly_rebalance
+    prices = pipeline.load_prices()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/task/data/data_pipeline.py", line 134, in load_prices
+    raise FileNotFoundError(
+FileNotFoundError: No price data found in /tmp/sdp/data.
+Run data/12_1trade_datascraper.py with Bloomberg to generate price data.

@@ -1,0 +1,29 @@
+============================================================
+MOMENTUM LONG/SHORT BACKTEST SUMMARY
+============================================================
+
+Period:        2010-01-01 to 2019-12-31
+Mode:          Long/Short
+Ranking:       Cross-Sectional
+
+CAGR:          1.5424%
+Volatility:    7.9972%
+Sharpe Ratio:  0.231
+Max Drawdown:  -16.3816%
+Calmar Ratio:  0.094
+
+Strategy Parameters:
+  Formation:     252d
+  Skip:          21d
+  Long%:         20%
+  Short%:        20%
+  Cost:          10 bps
+
+Risk Controls:
+  Vol target:    12%
+  Vol lookback:  126d
+  Sector cap:    30%
+  Name cap:      5%
+  DD breaker:    -15%
+  Macro regime:  OFF
+  Gold sleeve:   OFF

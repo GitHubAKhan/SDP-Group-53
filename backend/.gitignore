@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+venv/
+.venv/
+env/
+
+# OS
+.DS_Store
+
+# Node
+node_modules/
+
+# Archives / Lambda deployment packages (can be rebuilt)
+*.zip
+

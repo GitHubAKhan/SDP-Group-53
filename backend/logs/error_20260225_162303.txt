@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/var/task/lambda_handler.py", line 125, in handler
+    results = run_monthly_rebalance(dry_run=dry_run)
+  File "/var/task/execution/scheduler.py", line 157, in run_monthly_rebalance
+    from data.data_pipeline import DataPipeline
+  File "/var/task/data/data_pipeline.py", line 20, in <module>
+    import pandas as pd
+  File "/opt/python/pandas/__init__.py", line 19, in <module>
+    raise ImportError(
+        "Unable to import required dependencies:\n" + "\n".join(_missing_dependencies)
+    )
+ImportError: Unable to import required dependencies:
+numpy: Error importing numpy: you should not try to import numpy from
+        its source directory; please exit the numpy source tree, and relaunch
+        your python interpreter from there.
