@@ -1,0 +1,47 @@
+name: Deploy Lambda Functions
+
+on:
+  push:
+    branches:
+      - feature-connor
+    paths:
+      - 'frontend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: us-east-1
+    
+    - name: Deploy get_account Lambda
+      run: |
+        cd lambda/get_account
+        pip install -r requirements.txt -t .
+        zip -r function.zip .
+        aws lambda update-function-code \
+          --function-name trading-get-account \
+          --zip-file fileb://function.zip
+    
+    - name: Deploy get_positions Lambda
+      run: |
+        cd lambda/get_positions
+        pip install -r requirements.txt -t .
+        zip -r function.zip .
+        aws lambda update-function-code \
+          --function-name trading-get-positions \
+          --zip-file fileb://function.zip
