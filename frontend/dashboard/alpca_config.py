@@ -1,0 +1,8 @@
+"""
+Alpaca API Configuration
+"""
+
+# Your Alpaca API credentials
+ALPACA_API_KEY = "PKMZZSOBANRWO7VFNHH5WVIWP6"
+ALPACA_API_SECRET = "3E6f2ngprs77LfoPNNfosGPNcGmpYURB3YsE61gbVkvX"
+FRED_API_KEY="5d7049accb0d44979ed980c96b9aaab9"
