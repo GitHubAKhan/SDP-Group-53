@@ -222,8 +222,12 @@ function populateDashboard(account, positions, weekHistory, monthHistory) {
     const totalReturn = ((portfolioValue - initialCapital) / initialCapital) * 100;
     const dollarGain = portfolioValue - initialCapital;
 
-    const totalUnrealizedPL = positions.reduce((sum, pos) => sum + parseFloat(pos.unrealized_pl || 0), 0);
-    const todayChangePC = (totalUnrealizedPL / (portfolioValue - totalUnrealizedPL)) * 100;
+    // Daily change: use Alpaca's last_equity (portfolio value at previous close) as the baseline.
+    // Summing unrealized_pl across positions is wrong — it reflects gain since each position was
+    // opened, not since today's market open.
+    const lastEquity = parseFloat(account.last_equity || account.last_portfolio_value || portfolioValue);
+    const totalUnrealizedPL = portfolioValue - lastEquity;
+    const todayChangePC = lastEquity > 0 ? (totalUnrealizedPL / lastEquity) * 100 : 0;
 
     // Find best and worst performers
     const sorted = [...positions].sort((a, b) =>
@@ -276,19 +280,23 @@ function populateDashboard(account, positions, weekHistory, monthHistory) {
     `;
     document.getElementById('dashboard-metrics').innerHTML = metricsHTML;
 
-    // Performance stats
-    // Performance stats â€” calculated from real Alpaca history
-    function calcChange(history, currentValue) {
+    // Performance stats — calculated from real Alpaca history.
+    // Compare FIRST non-zero equity (period open) vs LAST non-zero equity in the same
+    // history array, so stat cards and the graph always draw from the same data.
+    function calcChange(history) {
         if (!history || !history.equity || history.equity.length < 2) return null;
         const startValue = history.equity.find(v => v > 0);
         if (!startValue) return null;
-        const dollar = currentValue - startValue;
+        // Walk backward to find the most recent non-zero close
+        const endValue = [...history.equity].reverse().find(v => v > 0);
+        if (!endValue) return null;
+        const dollar = Math.round((endValue - startValue) * 100) / 100;
         const pct = (dollar / startValue) * 100;
         return { dollar, pct };
     }
 
-    const weekChange = calcChange(weekHistory, portfolioValue);
-    const monthChange = calcChange(monthHistory, portfolioValue);
+    const weekChange = calcChange(weekHistory);
+    const monthChange = calcChange(monthHistory);
 
     function renderChange(change, label) {
         if (!change) return `
@@ -1047,7 +1055,10 @@ async function fetchPortfolioHistory(period) {
             let label;
             if (period === '1D') {
                 label = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            } else if (period === '1W' || period === '1M' || period === '3M') {
+            } else if (period === '1W') {
+                // Hourly points — show weekday + date so each day is clearly distinct on x-axis
+                label = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            } else if (period === '1M' || period === '3M') {
                 label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             } else {
                 label = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
